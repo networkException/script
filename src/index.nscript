@@ -26,9 +26,9 @@ for (let i = 0; i < 5; i++) {
 let i = 0
 let y, x = 0
 
-if(i != 0) console.error('BinaryExpression failed to assign the correct value to i');
-if(y != 0) console.error('BinaryExpression failed to assign the correct value to x');
-if(x != 0) console.error('BinaryExpression failed to assign the correct value to y');
+if (i != 0) console.error('BinaryExpression failed to assign the correct value to i');
+if (y != 0) console.error('BinaryExpression failed to assign the correct value to x');
+if (x != 0) console.error('BinaryExpression failed to assign the correct value to y');
 
 console.log()
 
