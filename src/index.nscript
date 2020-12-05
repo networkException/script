@@ -1,0 +1,36 @@
+/*let log := console.log;
+log('This is a log');
+	
+console.warn('This is a warning')
+console.error('This is an error');
+
+debug(a);
+let a;
+debug(a);
+a = 10;
+debug(a);
+
+while (5 > a) {
+	debug(a);
+	a += 1;
+}
+
+for (let i = 0; i < 5; i++) {
+	console.log(i);
+}
+
+for (let i = 0; i < 5; i++) {
+	console.log('i: ' + i);
+}*/
+
+let i = 0
+let y, x = 0
+
+if(i != 0) console.error('BinaryExpression failed to assign the correct value to i');
+if(y != 0) console.error('BinaryExpression failed to assign the correct value to x');
+if(x != 0) console.error('BinaryExpression failed to assign the correct value to y');
+
+console.log()
+
+debug(scope)
+debug(context)
