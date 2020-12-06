@@ -1,15 +1,5 @@
-let a = 0;
-debug(a);
+/*for (let i = 0; i < 10; i++) {
+    console.log('i is ' + i);
+}*/
 
-let b = a;
-debug(b);
-
-let c := a;
-debug(c);
-
-console.log('a = 1');
-a = 1;
-
-debug(a);
-debug(b);
-debug(c);
+console.test.me()

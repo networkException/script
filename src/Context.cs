@@ -16,6 +16,9 @@ namespace networkScript
 		{
 			Scope scope = new Scope();
 			Object console = new Object();
+			Object test = new Object();
+			
+			test.set("me", new Value((parameters, context) => Console.WriteLine("called console.test.me")));
 
 			console.set("log", new Value((parameters, context) =>
 			{
@@ -30,6 +33,8 @@ namespace networkScript
 				else Console.WriteLine();
 				Console.ResetColor();
 			}));
+			
+			console.set("test", new Value(() => new Value(test)));
 
 			console.set("warn", new Value((parameters, context) =>
 			{

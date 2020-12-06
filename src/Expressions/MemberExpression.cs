@@ -1,34 +1,34 @@
-﻿using System;
-
-namespace networkScript.Expressions
+﻿namespace networkScript.Expressions
 {
 	internal class MemberExpression : Expression
 	{
-		private readonly Expression m_expression;
-		private readonly Expression m_name;
+		private readonly Expression m_lhs;
+		private readonly Expression m_rhs;
 
-		public MemberExpression(Expression expression, Expression name)
+		public MemberExpression(Expression lhs, Expression rhs)
 		{
-			m_expression = expression;
-			m_name = name;
+			m_lhs = lhs;
+			m_rhs = rhs;
 		}
 
 		public override Value evaluate(Context context)
 		{
-			Value lhs = m_expression.evaluate(context);
-			if (!lhs.isObject()) return Value.Undefined;
+			Value lhs = m_lhs.evaluate(context);
+			if (!lhs.isObject()) return Value.Undefined; // TODO: Wrapper type checks
 
-			string key = m_name.GetType() == typeof(Identifier) ? ((Identifier) m_name).value() : m_name.evaluate(context).asString();
-			Object found = lhs.asObject();
+			string key = m_rhs.asString(context);
+			Object lhsAsObject = lhs.asObject();
 
-			return !found.has(key) ? Value.Undefined : found.get(key);
+			// The object's property needs to be evaluated again in case the result of this expression is the evaluation result of another
+			// (Member)Expression evaluation this expression.
+			return !lhsAsObject.has(key) ? Value.Undefined : lhsAsObject.get(key).evaluate(context);
 		}
 
 		public override void dump(int indent)
 		{
 			base.dump(indent);
-			m_expression.dump(indent + 1);
-			m_name.dump(indent + 1);
+			m_lhs.dump(indent + 1);
+			m_rhs.dump(indent + 1);
 		}
 	}
 }

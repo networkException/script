@@ -153,10 +153,7 @@ namespace networkScript
 
 		public Type type() { return m_type; }
 
-		public override Value evaluate(Context context)
-		{
-			return isNativeProperty() ? asNativeProperty().Invoke() : this;
-		}
+		public override Value evaluate(Context context) { return isNativeProperty() ? asNativeProperty().Invoke() : this; }
 		public override string ToString() { return asString(); }
 
 		public Value copy() { return new Value(m_type, m_value); }
