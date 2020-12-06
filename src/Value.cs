@@ -41,12 +41,10 @@ namespace networkScript {
 		}
 
 		// TODO: Setter implementation
-		/*
 		public Value(Func<Value, Value> nativeProperty)
 		{
-			m_value = nativeProperty;
-			m_type = Type.NativeProperty;
-		}*/
+			throw new NotImplementedException("NativeProperty with Setter not implemented");
+		}
 
 		public Value(Func<Value> nativeProperty) {
 			m_value = nativeProperty;
