@@ -4,8 +4,8 @@ namespace networkScript.Prototypes {
 	public class StringPrototype : Object {
 		private readonly string m_value;
 
-		public StringPrototype(Value value) {
-			m_value = value.asString();
+		public StringPrototype(string value) {
+			m_value = value;
 
 			set("length", length);
 			set("substring", substring);
@@ -22,12 +22,12 @@ namespace networkScript.Prototypes {
 
 			if (parameters.Count == 1) {
 				int first = (int) parameters[0].evaluate(context).asDouble();
-				
+
 				return new Value(m_value.Substring(first));
 			} else {
 				int first = (int) parameters[0].evaluate(context).asDouble();
 				int second = (int) parameters[1].evaluate(context).asDouble();
-				
+
 				return new Value(m_value.Substring(first, second - first));
 			}
 		}
@@ -37,30 +37,26 @@ namespace networkScript.Prototypes {
 
 			if (parameters.Count == 1) {
 				int first = (int) parameters[0].evaluate(context).asDouble();
-				
+
 				return new Value(m_value.Substring(0, first));
 			} else {
 				int first = (int) parameters[0].evaluate(context).asDouble();
 				int second = (int) parameters[1].evaluate(context).asDouble();
-				
+
 				return new Value(m_value.Substring(first, second));
 			}
 		}
 
-		private Value toLowerCase(IReadOnlyList<Expression> parameters, Context context) {
-			return new Value(m_value.ToLower());
-		}
-		
-		private Value toUpperCase(IReadOnlyList<Expression> parameters, Context context) {
-			return new Value(m_value.ToUpper());
-		}
-		
+		private Value toLowerCase(IReadOnlyList<Expression> parameters, Context context) { return new Value(m_value.ToLower()); }
+
+		private Value toUpperCase(IReadOnlyList<Expression> parameters, Context context) { return new Value(m_value.ToUpper()); }
+
 		private Value charAt(IReadOnlyList<Expression> parameters, Context context) {
 			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.charAt");
-			
+
 			return new Value(m_value.ToCharArray()[(int) parameters[0].evaluate(context).asDouble()].ToString());
 		}
-		
-		public override string ToString() { return "string.prototype(" + m_value + ")"; }
+
+		public override string ToString() { return m_value; }
 	}
 }

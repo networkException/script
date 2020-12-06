@@ -59,6 +59,8 @@
         <Compile Include="Parsing\Token.cs" />
         <Compile Include="Parsing\TokenMatch.cs" />
         <Compile Include="Parsing\TokenType.cs" />
+        <Compile Include="Prototypes\BooleanPrototype.cs" />
+        <Compile Include="Prototypes\NativeFunctionPrototype.cs" />
         <Compile Include="Statements\BlockStatement.cs" />
         <Compile Include="Expressions\CallExpression.cs" />
         <Compile Include="Context.cs" />

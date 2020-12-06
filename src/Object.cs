@@ -6,7 +6,10 @@ namespace networkScript {
 		private readonly Dictionary<string, Value> m_properties;
 		private Func<int, Value> m_numeric_index;
 
-		public Object() { m_properties = new Dictionary<string, Value>(); }
+		public Object() {
+			m_properties = new Dictionary<string, Value>();
+			set("toString", (parameters, context) => new Value(ToString()));
+		}
 
 		public Value get(string key) { return m_properties[key]; }
 		public bool has(string key) { return m_properties.ContainsKey(key); }

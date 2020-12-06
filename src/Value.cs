@@ -90,6 +90,7 @@ namespace networkScript {
 
 		public string asString() {
 			switch (m_type) {
+				case Type.String: return (string) m_value;
 				case Type.Undefined: return "undefined";
 				case Type.Null: return "null";
 				case Type.NativeFunction: return "<NativeFunction>";
@@ -101,7 +102,7 @@ namespace networkScript {
 		public bool toBoolean() {
 			switch (m_type) {
 				case Type.Undefined:
-				case Type.Null:
+				case Type.Null: 
 					return false;
 				case Type.Boolean: return asBoolean();
 				case Type.Number:
@@ -116,13 +117,12 @@ namespace networkScript {
 
 		public Object toObject() {
 			switch (m_type) {
-				case Type.String:
-					return new StringPrototype(this);
-				case Type.Object:
-					return asObject();
+				case Type.String: return new StringPrototype(asString());
+				case Type.Object: return asObject();
+				case Type.NativeFunction: return new NativeFunctionPrototype(asNativeFunction());
+				case Type.Boolean: return new BooleanPrototype(asBoolean());
 				default:
-					Debug.Assert(true);
-					return null;
+					return new Object();
 			}
 		}
 
