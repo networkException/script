@@ -4,6 +4,6 @@ namespace networkScript.Prototypes {
 
 		public BooleanPrototype(bool value) { m_value = value; }
 
-		public override string ToString() { return m_value.ToString(); }
+		public override string ToString() { return m_value ? "true" : "false"; }
 	}
 }
