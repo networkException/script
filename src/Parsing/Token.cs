@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 
 namespace networkScript.Parsing
 {
@@ -8,7 +7,7 @@ namespace networkScript.Parsing
 		private readonly TokenType m_type;
 		private readonly string m_pattern;
 		
-		public Token(TokenType type, [RegexPattern] string pattern)
+		public Token(TokenType type, string pattern)
 		{
 			m_type = type;
 			m_pattern = pattern;

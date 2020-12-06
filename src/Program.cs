@@ -14,7 +14,7 @@ namespace networkScript
 			Stopwatch tokenizerWatch = new Stopwatch();
 			tokenizerWatch.Start();
 
-			Tokenizer tokenizer = new Tokenizer(File.ReadAllText("../../index.nscript"));
+			Tokenizer tokenizer = new Tokenizer(File.ReadAllText("./src/index.nscript"));
 
 			List<TokenMatch> tokens = tokenizer.tokenize();
 
@@ -48,8 +48,6 @@ namespace networkScript
 
 			Console.WriteLine();
 			Console.WriteLine("Interpreted tree in " + interpreterWatch.ElapsedMilliseconds + " ms (" + interpreterWatch.ElapsedTicks + " ticks)");
-
-			Console.ReadKey();
 		}
 	}
 }
