@@ -9,7 +9,10 @@ namespace networkScript.Prototypes {
 
 			set("length", length);
 			set("substring", substring);
-			set("sublength", sublength);
+			set("toLowerCase", toLowerCase);
+			set("toUpperCase", toUpperCase);
+			set("charAt", charAt);
+			registerNumericIndex(index => new Value(m_value.ToCharArray()[index].ToString()));
 		}
 
 		private Value length() { return new Value(m_value.Length); }
@@ -44,6 +47,20 @@ namespace networkScript.Prototypes {
 			}
 		}
 
+		private Value toLowerCase(IReadOnlyList<Expression> parameters, Context context) {
+			return new Value(m_value.ToLower());
+		}
+		
+		private Value toUpperCase(IReadOnlyList<Expression> parameters, Context context) {
+			return new Value(m_value.ToUpper());
+		}
+		
+		private Value charAt(IReadOnlyList<Expression> parameters, Context context) {
+			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.charAt");
+			
+			return new Value(m_value.ToCharArray()[(int) parameters[0].evaluate(context).asDouble()].ToString());
+		}
+		
 		public override string ToString() { return "string.prototype(" + m_value + ")"; }
 	}
 }
