@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using networkScript.Declarations;
 using networkScript.Error;
+using networkScript.Expressions;
 using networkScript.Parsing;
 
 namespace networkScript
@@ -15,13 +17,13 @@ namespace networkScript
 		{
 			Scope scope = new Scope();
 			Object console = new Object();
-			
+
 			console.set("log", new Value((parameters, context) =>
 			{
 				if (parameters.Count == 1) Console.WriteLine(parameters[0].evaluate(context));
 				else Console.WriteLine();
 			}));
-			
+
 			console.set("error", new Value((parameters, context) =>
 			{
 				Console.ForegroundColor = ConsoleColor.Red;
@@ -29,7 +31,7 @@ namespace networkScript
 				else Console.WriteLine();
 				Console.ResetColor();
 			}));
-			
+
 			console.set("warn", new Value((parameters, context) =>
 			{
 				Console.ForegroundColor = ConsoleColor.Yellow;
@@ -46,11 +48,8 @@ namespace networkScript
 				else Console.WriteLine(parameters[0].evaluate(context));
 				Console.ResetColor();
 			}));
-			
-			scope.assign("exec", new Value((parameters, context) =>
-			{
-				new Parser().parse( new Tokenizer(parameters[0].evaluate(context).asString()).tokenize()).execute(context);
-			}));
+
+			scope.assign("exec", new Value((parameters, context) => { new Parser().parse(new Tokenizer(parameters[0].evaluate(context).asString()).tokenize()).execute(context); }));
 
 			scope.assign("scope", new Value(() => new Value(current().ToString())));
 			scope.assign("context", new Value(() => new Value(ToString())));
@@ -90,22 +89,20 @@ namespace networkScript
 
 		public Value reference(Expression expressions, Value value)
 		{
-			Value result = Value.Undefined;
-
 			expressions.visit(expression =>
 			{
 				string key = expression.asString(this);
 
 				foreach (Scope scope in scopeStack().Where(scope => scope.has(key)))
 				{
-					result = scope.reference(key, ref value);
+					scope.reference(key, ref value);
 					return;
 				}
 
-				result = current().reference(key, ref value);
+				current().reference(key, ref value);
 			});
 
-			return result;
+			return value;
 		}
 
 		public Value declare(Expression expression) { return current().declare(expression.asString(this)); }

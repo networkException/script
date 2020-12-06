@@ -63,7 +63,7 @@
 					Value rhs = m_rhs.evaluate(context);
 
 					if (lhs.type() == rhs.type() || lhs.type() == Value.Type.Undefined || lhs.type() == Value.Type.Null) 
-						return context.reference(m_lhs, m_rhs.evaluate(context));
+						return context.reference(m_lhs, rhs);
 
 					context.typeError("Cannot reference " + rhs.type() + " to " + lhs.type(), m_lhs);
 					return Value.Undefined;

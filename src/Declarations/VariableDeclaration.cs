@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using networkScript.Expressions;
 
 namespace networkScript.Declarations
@@ -19,6 +19,8 @@ namespace networkScript.Declarations
 			
 			return Value.Null;
 		}
+		
+		public override void visit(Action<Expression> visitor) { m_identifiers.visit(visitor); }
 
 		public override void dump(int indent)
 		{

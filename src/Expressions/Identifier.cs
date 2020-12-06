@@ -1,6 +1,6 @@
 ﻿using networkScript.Parsing;
 
-namespace networkScript
+namespace networkScript.Expressions
 {
 	public class Identifier : Expression
 	{

@@ -51,8 +51,8 @@ namespace networkScript.Parsing
 				new Token(TokenType.CurlyClose, "^\\}"),
 				new Token(TokenType.BracketOpen, "^\\["),
 				new Token(TokenType.BracketClose, "^\\]"),
-				new Token(TokenType.StringLiteral, "^\"(.*?)\""),
-				new Token(TokenType.StringLiteral, "^'(.*?)'"),
+				new Token(TokenType.StringLiteral, "^\"((?:[^\"\\\\]|\\\\.)*)\"", input => input.Replace("\\\"", "")),
+				new Token(TokenType.StringLiteral, "^'((?:[^'\\\\]|\\\\.)*)'", input => input.Replace("\\'", "")),
 				new Token(TokenType.NumericLiteral, "^\\d+\\.\\d+"),
 				new Token(TokenType.NumericLiteral, "^(\\d+)"),
 				new Token(TokenType.BooleanLiteral, "^(?:true|false)"),
@@ -125,7 +125,7 @@ namespace networkScript.Parsing
 
 					matched = true;
 					int length = match[0].Value.Length;
-					string value = match[0].Groups.Count == 2 ? match[0].Groups[1].Value : match[0].Value;
+					string value = token.modify(match[0].Groups.Count == 2 ? match[0].Groups[1].Value : match[0].Value);
 
 					TokenMatch tokenMatch = new TokenMatch(value, new PositionInfo(m_line, m_column, length, token));
 

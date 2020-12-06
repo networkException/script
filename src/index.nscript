@@ -35,4 +35,4 @@ console.log()
 debug(scope)
 debug(context)
 
-exec('console.log(\'sdfsdf\')')
+exec("console.log(\"i\")")

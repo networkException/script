@@ -22,7 +22,7 @@
 			{
 				case PostfixOperation.Increment:
 				{
-					Value lhs = m_value.evaluate(context);
+					var lhs = m_value.evaluate(context);
 
 					if (lhs.isNumber()) return lhs.increaseNumberBy(new Value(1));
 
