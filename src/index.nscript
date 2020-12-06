@@ -3,4 +3,5 @@ console.log("Let's see how far this \"language\" can go")
 
 let template = 'me';
 debug(template)
-console.log('Might as well add some fancy new features!\nLook its a ${scope} in a ${context}!')
+debug(scope)
+console.log('Might as well add some fancy new features!\nLook its a \${template} in a ${scope}!')

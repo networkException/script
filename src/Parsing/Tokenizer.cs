@@ -130,8 +130,18 @@ namespace networkScript.Parsing {
 					m_string_literal = string.Empty;
 					continue;
 				}
+				
+				if (inString() && matchAndTake("\\\\")) {
+					m_string_literal += "\\";
+					continue;
+				}
+				
+				if (inString() && match("\\${")) {
+					m_string_literal += take("\\${");
+					continue;
+				}
 
-				if (m_string_literal_type != StringLiteralType.None && matchAndTake("${")) {
+				if (inString() && matchAndTake("${")) {
 					match(m_string_literal, TokenType.StringLiteral);
 					m_string_literal = string.Empty;
 					m_string_literal_type = m_string_literal_type == StringLiteralType.SingleQuote ? StringLiteralType.SingleTemplate : StringLiteralType.DoubleTemplate;
@@ -199,6 +209,10 @@ namespace networkScript.Parsing {
 			m_source = m_source.Substring(characters);
 			m_column += characters;
 			return taken;
+		}
+		
+		private string take(string characters) {
+			return take(characters.Length);
 		}
 
 		private void takeLine() {
