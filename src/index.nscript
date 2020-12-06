@@ -1,1 +1,1 @@
-"${console.log('hello world')}"
+let a, b, c = '${console.log('Hello Friends')}';

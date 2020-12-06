@@ -188,7 +188,8 @@ namespace networkScript.Parsing {
 		}
 
 		private TemplateExpression parseTemplate(TokenMatch leading) {
-			List<Expression> elements = new List<Expression> {new Value(leading.value())};
+			List<Expression> elements = new List<Expression>();
+			if (leading.value().Length != 0) elements.Add(new Value(leading.value()));
 
 			while (match(TokenType.StringLiteral) || match(TokenType.TemplateOpen)) {
 				if (match(TokenType.StringLiteral)) elements.Add(new Value(Value.Type.String, consume(TokenType.StringLiteral)));
