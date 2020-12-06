@@ -44,8 +44,10 @@ namespace networkScript.Expressions {
 					Value lhs = m_lhs.evaluate(context);
 					Value rhs = m_rhs.evaluate(context);
 
-					if (lhs.type() == rhs.type() || lhs.type() == Value.Type.Null && m_lhs.GetType() == typeof(VariableDeclaration)) return context.assign(m_lhs, m_rhs.evaluate(context));
-
+					if (lhs.type() == rhs.type() || lhs.type() == Value.Type.Null && m_lhs.GetType() == typeof(VariableDeclaration)) {
+						return context.assign(m_lhs, rhs);
+					}
+					
 					context.typeError("Cannot assign " + rhs.type() + " to " + lhs.type(), m_lhs);
 					return Value.Undefined;
 				}
