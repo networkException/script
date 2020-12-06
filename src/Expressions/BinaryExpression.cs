@@ -1,4 +1,6 @@
-﻿namespace networkScript.Expressions
+﻿using networkScript.Declarations;
+
+namespace networkScript.Expressions
 {
 	internal enum BinaryOperation
 	{
@@ -51,7 +53,7 @@
 					Value lhs = m_lhs.evaluate(context);
 					Value rhs = m_rhs.evaluate(context);
 
-					if (lhs.type() == rhs.type() || lhs.type() == Value.Type.Undefined || lhs.type() == Value.Type.Null) 
+					if (lhs.type() == rhs.type() || lhs.type() == Value.Type.Null && m_lhs.GetType() == typeof(VariableDeclaration))
 						return context.assign(m_lhs, m_rhs.evaluate(context));
 
 					context.typeError("Cannot assign " + rhs.type() + " to " + lhs.type(), m_lhs);
@@ -62,8 +64,8 @@
 					Value lhs = m_lhs.evaluate(context);
 					Value rhs = m_rhs.evaluate(context);
 
-					if (lhs.type() == rhs.type() || lhs.type() == Value.Type.Undefined || lhs.type() == Value.Type.Null) 
-						return context.reference(m_lhs, rhs);
+					if (lhs.type() == rhs.type() || lhs.type() == Value.Type.Null && m_lhs.GetType() == typeof(VariableDeclaration))
+						return context.reference(m_lhs, m_rhs).evaluate(context);
 
 					context.typeError("Cannot reference " + rhs.type() + " to " + lhs.type(), m_lhs);
 					return Value.Undefined;
@@ -114,7 +116,7 @@
 					Value lhs = m_lhs.evaluate(context);
 					Value rhs = m_rhs.evaluate(context);
 
-					if (lhs.isNumber() && rhs.isNumber()) return context.get(m_lhs).increaseNumberBy(m_rhs.evaluate(context));
+					if (lhs.isNumber() && rhs.isNumber()) return context.get(m_lhs).evaluate(context).increaseNumberBy(m_rhs.evaluate(context));
 					
 					context.typeError("PlusEquals binary expression only applicable to numbers", lhs);
 					return Value.Null;

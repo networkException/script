@@ -11,7 +11,6 @@ namespace networkScript
 	public class Context
 	{
 		private readonly List<Scope> m_scopes;
-		private string m_error;
 
 		public Context()
 		{
@@ -57,7 +56,7 @@ namespace networkScript
 			m_scopes = new List<Scope> {scope};
 		}
 
-		public Value get(Expression expression)
+		public Expression get(Expression expression)
 		{
 			string key = expression.asString(this);
 
@@ -69,25 +68,21 @@ namespace networkScript
 
 		public Value assign(Expression expressions, Value value)
 		{
-			Value result = Value.Undefined;
-
 			expressions.visit(expression =>
 			{
 				string key = expression.asString(this);
 
 				foreach (Scope scope in scopeStack().Where(scope => scope.has(key)))
 				{
-					result = scope.assign(key, value);
+					scope.assign(key, value);
 					return;
 				}
-
-				result = current().assign(key, value);
 			});
 
-			return result;
+			return value;
 		}
 
-		public Value reference(Expression expressions, Value value)
+		public Expression reference(Expression expressions, Expression value)
 		{
 			expressions.visit(expression =>
 			{
@@ -95,17 +90,15 @@ namespace networkScript
 
 				foreach (Scope scope in scopeStack().Where(scope => scope.has(key)))
 				{
-					scope.reference(key, ref value);
+					scope.reference(key, value);
 					return;
 				}
-
-				current().reference(key, ref value);
 			});
 
 			return value;
 		}
 
-		public Value declare(Expression expression) { return current().declare(expression.asString(this)); }
+		public Expression declare(Expression expression) { return current().declare(expression.asString(this)); }
 
 		public void enter() { m_scopes.Add(new Scope()); }
 
