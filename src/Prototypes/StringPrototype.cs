@@ -15,7 +15,7 @@ namespace networkScript.Prototypes {
 		private Value length() { return new Value(m_value.Length); }
 
 		private Value substring(IReadOnlyList<Expression> parameters, Context context) {
-			if (parameters.Count != 1 || parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.substring");
+			if (parameters.Count != 1 && parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.substring");
 
 			if (parameters.Count == 1) {
 				int first = (int) parameters[0].evaluate(context).asDouble();
@@ -30,7 +30,7 @@ namespace networkScript.Prototypes {
 		}
 
 		private Value sublength(IReadOnlyList<Expression> parameters, Context context) {
-			if (parameters.Count != 1 || parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.sublength");
+			if (parameters.Count != 1 && parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.sublength");
 
 			if (parameters.Count == 1) {
 				int first = (int) parameters[0].evaluate(context).asDouble();
