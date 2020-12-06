@@ -192,8 +192,11 @@ namespace networkScript.Parsing {
 			if (leading.value().Length != 0) elements.Add(new Value(leading.value()));
 
 			while (match(TokenType.StringLiteral) || match(TokenType.TemplateOpen)) {
-				if (match(TokenType.StringLiteral)) elements.Add(new Value(Value.Type.String, consume(TokenType.StringLiteral)));
-				else {
+				if (match(TokenType.StringLiteral)) {
+					TokenMatch literal = consume(TokenType.StringLiteral);
+					
+					if (literal.value().Length != 0) elements.Add(new Value(Value.Type.String, literal));
+				} else {
 					consume(TokenType.TemplateOpen);
 					elements.Add(parseExpression());
 					consume(TokenType.TemplateClose);
