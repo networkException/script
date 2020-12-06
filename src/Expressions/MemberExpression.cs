@@ -25,5 +25,9 @@
 			m_lhs.dump(indent + 1);
 			m_rhs.dump(indent + 1);
 		}
+
+		public override string ToString() {
+			return "MemberExpression(" + m_lhs + ", " + m_rhs + ")";
+		}
 	}
 }

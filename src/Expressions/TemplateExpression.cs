@@ -21,5 +21,8 @@ namespace networkScript.Expressions {
 
 			foreach (Expression element in m_elements) element.dump(indent + 1);
 		}
+		public override string ToString() {
+			return string.Join(", ", m_elements);
+		}
 	}
 }

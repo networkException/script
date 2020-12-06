@@ -75,6 +75,7 @@ namespace networkScript {
 		//FIXME: Full implementation
 		public bool isNaN() { return !isNumber(); }
 		public bool isNumber() { return m_type == Type.Number; }
+		public bool isString() { return m_type == Type.String; }
 		public bool isBoolean() { return m_type == Type.Boolean; }
 		public bool isObject() { return m_type == Type.Object; }
 		public bool isFunction() { return m_type == Type.Function; }
@@ -129,11 +130,17 @@ namespace networkScript {
 		public Type type() { return m_type; }
 
 		public override Value evaluate(Context context) { return isNativeProperty() ? asNativeProperty().Invoke() : this; }
-		public override string ToString() { return asString(); }
+
+		public override string ToString() {
+			if(isString()) return "'" + asString() + "'";
+			return asString();
+		}
 
 		public Value copy() { return new Value(m_type, m_value); }
 
-		public override void dump(int indent) { dumpString("Value(" + (m_type.Equals(Type.String) ? "\"" : "") + ToString() + (m_type.Equals(Type.String) ? "\"" : "") + ")", indent); }
+		public override void dump(int indent) {
+			dumpString("Value(" + ToString() + ")", indent);
+		}
 
 		public enum Type {
 			Null,
