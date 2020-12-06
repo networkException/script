@@ -103,7 +103,7 @@ namespace networkScript.Parsing {
 					continue;
 				}
 
-				if (m_string_literal_type == StringLiteralType.None && matchAndTake("'")) {
+				if (!inString() && matchAndTake("'")) {
 					m_string_literal_type = StringLiteralType.SingleQuote;
 					continue;
 				}
@@ -120,7 +120,7 @@ namespace networkScript.Parsing {
 					continue;
 				}
 
-				if (m_string_literal_type == StringLiteralType.None && matchAndTake("\"")) {
+				if (!inString() && matchAndTake("\"")) {
 					m_string_literal_type = StringLiteralType.DoubleQuote;
 					continue;
 				}
