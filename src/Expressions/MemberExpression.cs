@@ -10,9 +10,18 @@
 
 		public override Value evaluate(Context context) {
 			Object lhs = m_lhs.evaluate(context).toObject();
-		
-			string key = m_rhs.asString(context);
-			
+			string key;
+
+			if (lhs.hasNumericIndex() && !m_rhs.isIdentifier()) {
+				Value rhs = m_rhs.evaluate(context);
+
+				if (rhs.isNumber()) return lhs.numericIndex((int) rhs.asDouble());
+
+				key = rhs.asString();
+			} else {
+				key = m_rhs.asString(context);
+			}
+
 			if(!lhs.has(key)) context.memberError("Property " + key + " does not exist on " + lhs);
 			
 			// The object's property needs to be evaluated again in case the result of this expression is the evaluation result of another
