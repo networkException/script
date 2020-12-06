@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using networkScript.Parsing;
-using networkScript.Wrapper;
+using networkScript.Prototypes;
 
 namespace networkScript {
 	public class Value : Expression {
@@ -117,7 +117,7 @@ namespace networkScript {
 		public Object toObject() {
 			switch (m_type) {
 				case Type.String:
-					return new StringWrapper(this);
+					return new StringPrototype(this);
 				case Type.Object:
 					return asObject();
 				default:

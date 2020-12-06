@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace networkScript.Wrapper {
-	public class StringWrapper : Object {
+namespace networkScript.Prototypes {
+	public class StringPrototype : Object {
 		private readonly string m_value;
 
-		public StringWrapper(Value value) {
+		public StringPrototype(Value value) {
 			m_value = value.asString();
 
 			set("length", length);
@@ -15,7 +15,7 @@ namespace networkScript.Wrapper {
 		private Value length() { return new Value(m_value.Length); }
 
 		private Value substring(IReadOnlyList<Expression> parameters, Context context) {
-			if (parameters.Count != 1 || parameters.Count != 2) context.typeError("Expected 1-2 arguments for StringWrapper.substring");
+			if (parameters.Count != 1 || parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.substring");
 
 			if (parameters.Count == 1) {
 				int first = (int) parameters[0].evaluate(context).asDouble();
@@ -30,7 +30,7 @@ namespace networkScript.Wrapper {
 		}
 
 		private Value sublength(IReadOnlyList<Expression> parameters, Context context) {
-			if (parameters.Count != 1 || parameters.Count != 2) context.typeError("Expected 1-2 arguments for StringWrapper.sublength");
+			if (parameters.Count != 1 || parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.sublength");
 
 			if (parameters.Count == 1) {
 				int first = (int) parameters[0].evaluate(context).asDouble();
@@ -44,6 +44,6 @@ namespace networkScript.Wrapper {
 			}
 		}
 
-		public override string ToString() { return "StringWrapper(" + m_value + ")"; }
+		public override string ToString() { return "string.prototype(" + m_value + ")"; }
 	}
 }

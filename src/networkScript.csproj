@@ -76,7 +76,7 @@
         <Compile Include="Value.cs" />
         <Compile Include="Statements\WhileStatement.cs" />
         <Compile Include="Function.cs" />
-        <Compile Include="Wrapper\StringWrapper.cs" />
+        <Compile Include="Prototypes\StringPrototype.cs" />
     </ItemGroup>
     <ItemGroup>
         <None Include="App.config" />
