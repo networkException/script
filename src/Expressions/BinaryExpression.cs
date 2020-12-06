@@ -53,8 +53,11 @@ namespace networkScript.Expressions {
 					Value lhs = m_lhs.evaluate(context);
 					Value rhs = m_rhs.evaluate(context);
 
-					if (lhs.type() == rhs.type() || lhs.type() == Value.Type.Null && m_lhs.GetType() == typeof(VariableDeclaration)) return context.reference(m_lhs, m_rhs).evaluate(context);
-
+					if (lhs.type() == rhs.type() || lhs.type() == Value.Type.Null && m_lhs.GetType() == typeof(VariableDeclaration)) {
+						context.reference(m_lhs, m_rhs);
+						return rhs;
+					}
+					
 					context.typeError("Cannot reference " + rhs.type() + " to " + lhs.type(), m_lhs);
 					return Value.Undefined;
 				}

@@ -12,7 +12,9 @@ namespace networkScript.Expressions {
 			m_info = info;
 		}
 
-		public override Value evaluate(Context context) { return new Value(string.Join("", m_elements.Select(element => element.evaluate(context).asString()))); }
+		public override Value evaluate(Context context) {
+			return new Value(string.Join("", m_elements.Select(element => element.evaluate(context).asString())));
+		}
 
 		public override void visit(Action<Expression> visitor) { m_elements.ForEach(visitor); }
 
