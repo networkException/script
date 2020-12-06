@@ -1,7 +1,3 @@
-namespace networkScript
-{
-	public class Function
-	{
-		
-	}
+namespace networkScript {
+	public class Function { }
 }

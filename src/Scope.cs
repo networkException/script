@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace networkScript
-{
-	internal class Scope : Node
-	{
+namespace networkScript {
+	internal class Scope : Node {
 		private readonly Dictionary<string, Expression> m_identifiers;
 
 		public Scope() { m_identifiers = new Dictionary<string, Expression>(); }
@@ -18,12 +16,10 @@ namespace networkScript
 
 		public Expression reference(string identifier, Expression value) { return m_identifiers[identifier] = value; }
 
-		public override void dump(int indent)
-		{
+		public override void dump(int indent) {
 			base.dump(indent);
 
-			foreach (KeyValuePair<string, Expression> entry in m_identifiers)
-				dumpString(entry.Key + ": " + entry.Value, indent + 1);
+			foreach (KeyValuePair<string, Expression> entry in m_identifiers) dumpString(entry.Key + ": " + entry.Value, indent + 1);
 		}
 
 		public override string ToString() { return "Scope(" + string.Join(", ", m_identifiers) + ")"; }

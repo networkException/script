@@ -3,50 +3,42 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using networkScript.Parsing;
 
-namespace networkScript
-{
-	public class Value : Expression
-	{
+namespace networkScript {
+	public class Value : Expression {
 		private object m_value;
 		private readonly Type m_type;
 
-		private Value(Type type, object value)
-		{
+		private Value(Type type, object value) {
 			m_value = value;
 			m_type = type;
 		}
 
-		public Value(Type type, TokenMatch match)
-		{
+		public Value(Type type, TokenMatch match) {
 			m_value = match.value();
 			m_info = match.info();
 			m_type = type;
 		}
 
-		public Value(Object value)
-		{
+		public Value(Object value) {
 			m_value = value;
 			m_type = Type.Object;
 		}
 
-		public Value(Function value)
-		{
+		public Value(Function value) {
 			m_value = value;
 			m_type = Type.Function;
 		}
 
-		public Value(Action<List<Expression>, Context> nativeFunction) : this((parameters, context) =>
-		{
+		public Value(Action<List<Expression>, Context> nativeFunction) : this((parameters, context) => {
 			nativeFunction.Invoke(parameters, context);
 			return Undefined;
 		}) { }
 
-		public Value(Func<List<Expression>, Context, Value> nativeFunction)
-		{
+		public Value(Func<List<Expression>, Context, Value> nativeFunction) {
 			m_value = nativeFunction;
 			m_type = Type.NativeFunction;
 		}
-		
+
 		// TODO: Setter implementation
 		/*
 		public Value(Func<Value, Value> nativeProperty)
@@ -54,33 +46,28 @@ namespace networkScript
 			m_value = nativeProperty;
 			m_type = Type.NativeProperty;
 		}*/
-		
-		public Value(Func<Value> nativeProperty)
-		{
+
+		public Value(Func<Value> nativeProperty) {
 			m_value = nativeProperty;
 			m_type = Type.NativeProperty;
 		}
 
-		public Value(bool value)
-		{
+		public Value(bool value) {
 			m_value = value;
 			m_type = Type.Boolean;
 		}
 
-		public Value(string value)
-		{
+		public Value(string value) {
 			m_value = value;
 			m_type = Type.String;
 		}
 
-		public Value(int value)
-		{
+		public Value(int value) {
 			m_value = value;
 			m_type = Type.Number;
 		}
 
-		public Value(double value)
-		{
+		public Value(double value) {
 			m_value = value;
 			m_type = Type.Number;
 		}
@@ -98,48 +85,36 @@ namespace networkScript
 		public double asDouble() { return Convert.ToDouble(m_value); }
 		public Object asObject() { return (Object) m_value; }
 		public Func<List<Expression>, Context, Value> asNativeFunction() { return (Func<List<Expression>, Context, Value>) m_value; }
-		
+
 		public Func<Value> asNativeProperty() { return (Func<Value>) m_value; }
 
-		public string asString()
-		{
-			switch (m_type)
-			{
-				case Type.Undefined:
-					return "undefined";
-				case Type.Null:
-					return "null";
-				case Type.NativeFunction:
-					return "<NativeFunction>";
-				case Type.NativeProperty:
-					return "<NativeProperty>";
-				default:
-					return Convert.ToString(m_value);
+		public string asString() {
+			switch (m_type) {
+				case Type.Undefined: return "undefined";
+				case Type.Null: return "null";
+				case Type.NativeFunction: return "<NativeFunction>";
+				case Type.NativeProperty: return "<NativeProperty>";
+				default: return Convert.ToString(m_value);
 			}
 		}
 
-		public bool toBoolean()
-		{
-			switch (m_type)
-			{
+		public bool toBoolean() {
+			switch (m_type) {
 				case Type.Undefined:
 				case Type.Null:
 					return false;
-				case Type.Boolean:
-					return asBoolean();
+				case Type.Boolean: return asBoolean();
 				case Type.Number:
 					if (isNaN()) return false;
 					return asDouble() != 0;
-				case Type.String:
-					return asString() != "";
+				case Type.String: return asString() != "";
 				default:
 					Debug.Assert(true);
 					return false;
 			}
 		}
 
-		public Value increaseNumberBy(Value value)
-		{
+		public Value increaseNumberBy(Value value) {
 			if (!value.isNumber() || !isNumber()) return Undefined;
 
 			m_value = asDouble() + value.asDouble();
@@ -160,8 +135,7 @@ namespace networkScript
 
 		public override void dump(int indent) { dumpString("Value(" + (m_type.Equals(Type.String) ? "\"" : "") + ToString() + (m_type.Equals(Type.String) ? "\"" : "") + ")", indent); }
 
-		public enum Type
-		{
+		public enum Type {
 			Null,
 			Undefined,
 			String,

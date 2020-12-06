@@ -1,7 +1,5 @@
-﻿namespace networkScript.Parsing
-{
-	public enum TokenType
-	{
+﻿namespace networkScript.Parsing {
+	public enum TokenType {
 		For,
 		While,
 		If,
@@ -12,6 +10,8 @@
 		CurlyClose,
 		BracketOpen,
 		BracketClose,
+		TemplateOpen,
+		TemplateClose,
 		Let,
 		Const,
 		Class,
@@ -36,5 +36,13 @@
 		BooleanLiteral,
 		TypeDefinition,
 		Eof
+	}
+
+	public enum StringLiteralType {
+		None,
+		SingleQuote,
+		DoubleQuote,
+		SingleTemplate,
+		DoubleTemplate
 	}
 }

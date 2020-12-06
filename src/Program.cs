@@ -4,13 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using networkScript.Parsing;
 
-namespace networkScript
-{
-	internal static class Program
-	{
+namespace networkScript {
+	internal static class Program {
 		// ReSharper disable once InconsistentNaming
-		private static void Main(string[] args)
-		{
+		private static void Main(string[] args) {
 			Stopwatch tokenizerWatch = new Stopwatch();
 			tokenizerWatch.Start();
 

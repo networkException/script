@@ -5,25 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace networkScript.Parsing
-{
-	internal class Tokenizer
-	{
+namespace networkScript.Parsing {
+	internal class Tokenizer {
 		private readonly List<Token> m_definitions;
 		private readonly Token m_end_of_file;
 
 		private bool m_line_comment;
 		private bool m_block_comment;
 
+		private StringLiteralType m_string_literal_type;
+		private string m_string_literal;
+
 		private int m_line;
 		private int m_column;
 
 		private string m_source;
+		private readonly List<TokenMatch> m_matches;
 
-		public Tokenizer(string source)
-		{
-			m_definitions = new List<Token>
-			{
+		public Tokenizer(string source) {
+			m_definitions = new List<Token> {
 				new Token(TokenType.If, "^if"),
 				new Token(TokenType.Else, "^else"),
 				new Token(TokenType.For, "^for"),
@@ -51,8 +51,6 @@ namespace networkScript.Parsing
 				new Token(TokenType.CurlyClose, "^\\}"),
 				new Token(TokenType.BracketOpen, "^\\["),
 				new Token(TokenType.BracketClose, "^\\]"),
-				new Token(TokenType.StringLiteral, "^\"((?:[^\"\\\\]|\\\\.)*)\"", input => input.Replace("\\\"", "")),
-				new Token(TokenType.StringLiteral, "^'((?:[^'\\\\]|\\\\.)*)'", input => input.Replace("\\'", "")),
 				new Token(TokenType.NumericLiteral, "^\\d+\\.\\d+"),
 				new Token(TokenType.NumericLiteral, "^(\\d+)"),
 				new Token(TokenType.BooleanLiteral, "^(?:true|false)"),
@@ -66,92 +64,128 @@ namespace networkScript.Parsing
 
 			m_line_comment = false;
 			m_block_comment = false;
+			m_string_literal_type = StringLiteralType.None;
 
 			m_line = 0;
 			m_column = 0;
 
-			m_source = source;
+			m_source = Regex.Replace(source, @"\r\n|\n\r|\n|\r|\t", Environment.NewLine);
+			m_matches = new List<TokenMatch>();
 		}
 
-		public List<TokenMatch> tokenize()
-		{
-			m_source = Regex.Replace(m_source, @"\r\n|\n\r|\n|\r|\t", Environment.NewLine);
-
-			List<TokenMatch> matches = new List<TokenMatch>();
-
-			while (!done())
-			{
-				bool matched = false;
-
-				if (match(Environment.NewLine))
-				{
+		public List<TokenMatch> tokenize() {
+			while (!done()) {
+				if (match(Environment.NewLine)) {
 					if (m_line_comment) m_line_comment = false;
 
 					takeLine();
 					continue;
 				}
 
-				if (matchAndTake("//"))
-				{
+				if (matchAndTake("//")) {
 					m_line_comment = true;
 					continue;
 				}
 
-				if (matchAndTake("/*"))
-				{
+				if (matchAndTake("/*")) {
 					m_block_comment = true;
 					continue;
 				}
 
-				if (matchAndTake("*/"))
-				{
+				if (matchAndTake("*/")) {
 					m_block_comment = false;
+					continue;
+				}
+
+				if (m_string_literal_type == StringLiteralType.None && matchAndTake("'")) {
+					m_string_literal_type = StringLiteralType.SingleQuote;
+					continue;
+				}
+
+				if (m_string_literal_type == StringLiteralType.SingleQuote && matchAndTake("\\'")) {
+					m_string_literal += "'";
+					continue;
+				}
+
+				if (m_string_literal_type == StringLiteralType.SingleQuote && matchAndTake("'")) {
+					match(m_string_literal, TokenType.StringLiteral);
+					m_string_literal_type = StringLiteralType.None;
+					m_string_literal = string.Empty;
+					continue;
+				}
+
+				if (m_string_literal_type == StringLiteralType.None && matchAndTake("\"")) {
+					m_string_literal_type = StringLiteralType.DoubleQuote;
+					continue;
+				}
+
+				if (m_string_literal_type == StringLiteralType.DoubleQuote && matchAndTake("\\\"")) {
+					m_string_literal += "\"";
+					continue;
+				}
+
+				if (m_string_literal_type == StringLiteralType.DoubleQuote && matchAndTake("\"")) {
+					match(m_string_literal, TokenType.StringLiteral);
+					m_string_literal_type = StringLiteralType.None;
+					m_string_literal = string.Empty;
+					continue;
+				}
+
+				if (m_string_literal_type != StringLiteralType.None && matchAndTake("${")) {
+					match(m_string_literal, TokenType.StringLiteral);
+					m_string_literal = string.Empty;
+					m_string_literal_type = m_string_literal_type == StringLiteralType.SingleQuote ? StringLiteralType.SingleTemplate : StringLiteralType.DoubleTemplate;
+					match("${", TokenType.TemplateOpen);
+					continue;
+				}
+
+				if (inTemplate() && matchAndTake("}")) {
+					m_string_literal_type = m_string_literal_type == StringLiteralType.SingleTemplate ? StringLiteralType.SingleQuote : StringLiteralType.DoubleQuote;
+					match("}", TokenType.TemplateClose);
+					continue;
+				}
+
+				if (inString()) {
+					m_string_literal += take(1);
 					continue;
 				}
 
 				if (!done() && matchAndTake(" ")) continue;
 
-				if (m_block_comment || m_line_comment)
-				{
+				if (m_block_comment || m_line_comment) {
 					take(1);
 					continue;
 				}
 
-				foreach (Token token in m_definitions)
-				{
-					MatchCollection match = token.match(m_source);
+				bool matched = false;
 
-					if (match.Count != 1 || !match[0].Success) continue;
+				foreach (Token token in m_definitions) {
+					MatchCollection tokenMatch = token.match(m_source);
+
+					if (tokenMatch.Count != 1 || !tokenMatch[0].Success) continue;
 
 					matched = true;
-					int length = match[0].Value.Length;
-					string value = token.modify(match[0].Groups.Count == 2 ? match[0].Groups[1].Value : match[0].Value);
+					int length = tokenMatch[0].Value.Length;
+					string value = tokenMatch[0].Groups.Count == 2 ? tokenMatch[0].Groups[1].Value : tokenMatch[0].Value;
 
-					TokenMatch tokenMatch = new TokenMatch(value, new PositionInfo(m_line, m_column, length, token));
-
-					matches.Add(tokenMatch);
-					Console.WriteLine(tokenMatch);
-
+					match(value, length, token.type());
 					take(length);
 					break;
 				}
 
 				if (matched) continue;
 
-				List<TokenMatch> empty = new List<TokenMatch> {new TokenMatch("", new PositionInfo(m_line, m_column, 0, m_end_of_file))};
-
-				return empty;
+				break;
 			}
 
-			matches.Add(new TokenMatch("", new PositionInfo(m_line, m_column, 0, m_end_of_file)));
+			match("", TokenType.Eof);
 
-			return matches;
+			return m_matches;
 		}
 
 		private bool match(string characters) { return m_source.StartsWith(characters); }
 
-		private bool matchAndTake(string characters)
-		{
+		private bool matchAndTake(string characters) {
 			bool matches = m_source.StartsWith(characters);
 
 			if (matches) take(characters.Length);
@@ -159,27 +193,37 @@ namespace networkScript.Parsing
 			return matches;
 		}
 
-		private void take(int characters)
-		{
+		private string take(int characters) {
+			string taken = m_source.Substring(0, characters);
+
 			m_source = m_source.Substring(characters);
 			m_column += characters;
+			return taken;
 		}
 
-		private void takeLine()
-		{
+		private void takeLine() {
 			m_source = m_source.Substring(Environment.NewLine.Length);
 			m_column = 0;
 			m_line++;
 		}
 
+		private void match(string value, TokenType token) { match(value, value.Length, token); }
+
+		private void match(string value, int lenght, TokenType token) {
+			TokenMatch match = new TokenMatch(value, new LocationInfo(m_line, m_column, m_column + lenght, token));
+			Console.WriteLine(match);
+			m_matches.Add(match);
+		}
+
+		public bool inTemplate() { return m_string_literal_type == StringLiteralType.SingleTemplate || m_string_literal_type == StringLiteralType.DoubleTemplate; }
+		
+		public bool inString() { return m_string_literal_type == StringLiteralType.SingleQuote || m_string_literal_type == StringLiteralType.DoubleQuote; }
+
 		private bool done() { return m_source.Length < 1; }
 
-		public static string escape(string input)
-		{
-			using (StringWriter writer = new StringWriter())
-			{
-				using (CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp"))
-				{
+		public static string escape(string input) {
+			using (StringWriter writer = new StringWriter()) {
+				using (CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp")) {
 					provider.GenerateCodeFromExpression(new CodePrimitiveExpression(input), writer, null);
 					return writer.ToString();
 				}

@@ -1,22 +1,17 @@
-﻿namespace networkScript.Statements
-{
-	internal class IfStatement : Statement
-	{
+﻿namespace networkScript.Statements {
+	internal class IfStatement : Statement {
 		private readonly Expression m_predicate;
 		private readonly Statement m_consequent;
 		private readonly Statement m_alternate;
 
-		public IfStatement(Expression predicate, Statement consequent, Statement alternate = null)
-		{
+		public IfStatement(Expression predicate, Statement consequent, Statement alternate = null) {
 			m_predicate = predicate;
 			m_consequent = consequent;
 			m_alternate = alternate;
 		}
 
-		public override Value execute(Context context)
-		{
-			if (m_predicate.evaluate(context).asBoolean())
-			{
+		public override Value execute(Context context) {
+			if (m_predicate.evaluate(context).asBoolean()) {
 				return m_consequent.execute(context);
 			}
 
@@ -27,8 +22,7 @@
 		public Statement consequent() { return m_consequent; }
 		public Statement alternate() { return m_alternate; }
 
-		public override void dump(int indent)
-		{
+		public override void dump(int indent) {
 			base.dump(indent);
 			m_predicate.dump(indent + 1);
 			m_consequent.dump(indent + 1);

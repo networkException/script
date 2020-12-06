@@ -1,15 +1,12 @@
 ﻿using networkScript.Parsing;
 
-namespace networkScript.Expressions
-{
-	public class Identifier : Expression
-	{
+namespace networkScript.Expressions {
+	public class Identifier : Expression {
 		private readonly string m_value;
 
 		public Identifier(string value) { m_value = value; }
 
-		public Identifier(TokenMatch match)
-		{
+		public Identifier(TokenMatch match) {
 			m_value = match.value();
 			m_info = match.info();
 		}
