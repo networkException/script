@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using networkScript.Error;
+using networkScript.Parsing;
 
 namespace networkScript
 {
@@ -44,6 +45,11 @@ namespace networkScript
 				if (parameters[0].GetType() == typeof(Identifier)) Console.WriteLine(parameters[0] + ": " + parameters[0].evaluate(context));
 				else Console.WriteLine(parameters[0].evaluate(context));
 				Console.ResetColor();
+			}));
+			
+			scope.assign("exec", new Value((parameters, context) =>
+			{
+				new Parser().parse( new Tokenizer(parameters[0].evaluate(context).asString()).tokenize()).execute(context);
 			}));
 
 			scope.assign("scope", new Value(() => new Value(current().ToString())));

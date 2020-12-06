@@ -111,6 +111,8 @@ namespace networkScript
 					return "null";
 				case Type.NativeFunction:
 					return "<NativeFunction>";
+				case Type.NativeProperty:
+					return "<NativeProperty>";
 				default:
 					return Convert.ToString(m_value);
 			}

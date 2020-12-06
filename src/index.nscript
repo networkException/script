@@ -15,7 +15,7 @@ while (5 > a) {
 	a += 1;
 }
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 5; i++) { 
 	console.log(i);
 }
 
@@ -34,3 +34,5 @@ console.log()
 
 debug(scope)
 debug(context)
+
+exec('console.log(\'sdfsdf\')')
