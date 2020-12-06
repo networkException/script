@@ -12,7 +12,7 @@ namespace networkScript.Parsing {
 		private bool m_line_comment;
 		private bool m_block_comment;
 
-		private StringLiteralType m_string_literal_type;
+		private readonly Stack<StringToken> m_string_token_stack;
 		private string m_string_literal;
 
 		private int m_line;
@@ -61,10 +61,11 @@ namespace networkScript.Parsing {
 
 			m_line_comment = false;
 			m_block_comment = false;
-			
-			m_string_literal_type = StringLiteralType.None;
+
+			m_string_token_stack = new Stack<StringToken>();
+			m_string_token_stack.Push(StringToken.None);
 			m_string_literal = string.Empty;
-			
+
 			m_line = 0;
 			m_column = 0;
 
@@ -80,7 +81,7 @@ namespace networkScript.Parsing {
 					takeLine();
 					continue;
 				}
-				
+
 				if (!done() && !inString() && matchAndTake(" ")) continue;
 
 				if (m_block_comment || m_line_comment) {
@@ -104,44 +105,44 @@ namespace networkScript.Parsing {
 				}
 
 				if (!inString() && matchAndTake("'")) {
-					m_string_literal_type = StringLiteralType.SingleQuote;
+					pushStringToken(StringToken.SingleQuote);
 					continue;
 				}
 
-				if (m_string_literal_type == StringLiteralType.SingleQuote && matchAndTake("\\'")) {
+				if (peekStringToken() == StringToken.SingleQuote && matchAndTake("\\'")) {
 					m_string_literal += "'";
 					continue;
 				}
 
-				if (m_string_literal_type == StringLiteralType.SingleQuote && matchAndTake("'")) {
+				if (peekStringToken() == StringToken.SingleQuote && matchAndTake("'")) {
 					match(m_string_literal, TokenType.StringLiteral);
-					m_string_literal_type = StringLiteralType.None;
+					popStringToken();
 					m_string_literal = string.Empty;
 					continue;
 				}
 
 				if (!inString() && matchAndTake("\"")) {
-					m_string_literal_type = StringLiteralType.DoubleQuote;
+					pushStringToken(StringToken.DoubleQuote);
 					continue;
 				}
 
-				if (m_string_literal_type == StringLiteralType.DoubleQuote && matchAndTake("\\\"")) {
+				if (peekStringToken() == StringToken.DoubleQuote && matchAndTake("\\\"")) {
 					m_string_literal += "\"";
 					continue;
 				}
 
-				if (m_string_literal_type == StringLiteralType.DoubleQuote && matchAndTake("\"")) {
+				if (peekStringToken() == StringToken.DoubleQuote && matchAndTake("\"")) {
 					match(m_string_literal, TokenType.StringLiteral);
-					m_string_literal_type = StringLiteralType.None;
+					popStringToken();
 					m_string_literal = string.Empty;
 					continue;
 				}
-				
+
 				if (inString() && matchAndTake("\\\\")) {
 					m_string_literal += "\\";
 					continue;
 				}
-				
+
 				if (inString() && match("\\${")) {
 					m_string_literal += take("\\${");
 					continue;
@@ -150,13 +151,13 @@ namespace networkScript.Parsing {
 				if (inString() && matchAndTake("${")) {
 					match(m_string_literal, TokenType.StringLiteral);
 					m_string_literal = string.Empty;
-					m_string_literal_type = m_string_literal_type == StringLiteralType.SingleQuote ? StringLiteralType.SingleTemplate : StringLiteralType.DoubleTemplate;
+					pushStringToken(StringToken.Template);
 					match("${", TokenType.TemplateOpen);
 					continue;
 				}
 
 				if (inTemplate() && matchAndTake("}")) {
-					m_string_literal_type = m_string_literal_type == StringLiteralType.SingleTemplate ? StringLiteralType.SingleQuote : StringLiteralType.DoubleQuote;
+					popStringToken();
 					match("}", TokenType.TemplateClose);
 					continue;
 				}
@@ -209,10 +210,8 @@ namespace networkScript.Parsing {
 			m_column += characters;
 			return taken;
 		}
-		
-		private string take(string characters) {
-			return take(characters.Length);
-		}
+
+		private string take(string characters) { return take(characters.Length); }
 
 		private void takeLine() {
 			m_source = m_source.Substring(Environment.NewLine.Length);
@@ -228,9 +227,14 @@ namespace networkScript.Parsing {
 			m_matches.Add(match);
 		}
 
-		private bool inTemplate() { return m_string_literal_type == StringLiteralType.SingleTemplate || m_string_literal_type == StringLiteralType.DoubleTemplate; }
+		private bool inTemplate() { return m_string_token_stack.Peek() == StringToken.Template; }
 
-		private bool inString() { return m_string_literal_type == StringLiteralType.SingleQuote || m_string_literal_type == StringLiteralType.DoubleQuote; }
+		private bool inString() { return m_string_token_stack.Peek() == StringToken.SingleQuote || m_string_token_stack.Peek() == StringToken.DoubleQuote; }
+
+		private void pushStringToken(StringToken token) { m_string_token_stack.Push(token); }
+		private void popStringToken() { m_string_token_stack.Pop(); }
+
+		private StringToken peekStringToken() { return m_string_token_stack.Peek(); }
 
 		private bool done() { return m_source.Length < 1; }
 

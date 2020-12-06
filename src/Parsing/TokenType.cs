@@ -38,11 +38,10 @@
 		Eof
 	}
 
-	public enum StringLiteralType {
+	public enum StringToken {
 		None,
 		SingleQuote,
 		DoubleQuote,
-		SingleTemplate,
-		DoubleTemplate
+		Template
 	}
 }
