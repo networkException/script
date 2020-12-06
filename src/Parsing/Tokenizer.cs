@@ -81,7 +81,7 @@ namespace networkScript.Parsing {
 					continue;
 				}
 				
-				if (!done() && matchAndTake(" ")) continue;
+				if (!done() && !inString() && matchAndTake(" ")) continue;
 
 				if (m_block_comment || m_line_comment) {
 					take(1);
