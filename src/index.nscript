@@ -1,3 +1,6 @@
 console.log('It\'s escape time!')
 console.log("Let's see how far this \"language\" can go")
-console.log('Might as well add some fancy new features!\nLook its a ${scope}!')
+
+let template = 'me';
+debug(template)
+console.log('Might as well add some fancy new features!\nLook its a ${scope} in a ${context}!')

@@ -51,6 +51,7 @@
         <Compile Include="Expressions\Identifier.cs" />
         <Compile Include="Expressions\IdentifierList.cs" />
         <Compile Include="Expressions\MemberExpression.cs" />
+        <Compile Include="Expressions\TemplateExpression.cs" />
         <Compile Include="Object.cs" />
         <Compile Include="Parsing\Parser.cs" />
         <Compile Include="Parsing\LocationInfo.cs" />

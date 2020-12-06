@@ -94,7 +94,12 @@ namespace networkScript.Parsing {
 					consume(TokenType.ParenClose);
 					return expression;
 				case TokenType.Identifier: return parseIdentifier();
-				case TokenType.StringLiteral: return new Value(Value.Type.String, consume(TokenType.StringLiteral));
+				case TokenType.StringLiteral:
+					TokenMatch value = consume(TokenType.StringLiteral);
+
+					if (match(TokenType.TemplateOpen)) return parseTemplate(value);
+
+					return new Value(Value.Type.String, value);
 				case TokenType.NumericLiteral: return new Value(Value.Type.Number, consume(TokenType.NumericLiteral));
 				case TokenType.Let:
 					consume(TokenType.Let);
@@ -180,6 +185,21 @@ namespace networkScript.Parsing {
 				identifiers.Add(parseIdentifier());
 			while (matchAndConsume(TokenType.Comma));
 			return new IdentifierList(identifiers);
+		}
+
+		private TemplateExpression parseTemplate(TokenMatch leading) {
+			List<Expression> elements = new List<Expression> {new Value(leading.value())};
+
+			while (match(TokenType.StringLiteral) || match(TokenType.TemplateOpen)) {
+				if (match(TokenType.StringLiteral)) elements.Add(new Value(Value.Type.String, consume(TokenType.StringLiteral)));
+				else {
+					consume(TokenType.TemplateOpen);
+					elements.Add(parseExpression());
+					consume(TokenType.TemplateClose);
+				}
+			}
+
+			return new TemplateExpression(elements, leading.info());
 		}
 
 		private BlockStatement parseBlockStatement() {
