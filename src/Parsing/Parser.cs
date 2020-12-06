@@ -101,6 +101,7 @@ namespace networkScript.Parsing {
 
 					return new Value(Value.Type.String, value);
 				case TokenType.NumericLiteral: return new Value(Value.Type.Number, consume(TokenType.NumericLiteral));
+				case TokenType.BooleanLiteral: return new Value(Value.Type.Boolean, consume(TokenType.BooleanLiteral));
 				case TokenType.Let:
 					consume(TokenType.Let);
 					return new VariableDeclaration(parseIdentifiers());
@@ -194,7 +195,7 @@ namespace networkScript.Parsing {
 			while (match(TokenType.StringLiteral) || match(TokenType.TemplateOpen)) {
 				if (match(TokenType.StringLiteral)) {
 					TokenMatch literal = consume(TokenType.StringLiteral);
-					
+
 					if (literal.value().Length != 0) elements.Add(new Value(Value.Type.String, literal));
 				} else {
 					consume(TokenType.TemplateOpen);
@@ -242,6 +243,7 @@ namespace networkScript.Parsing {
 			switch (current().token()) {
 				case TokenType.NumericLiteral:
 				case TokenType.StringLiteral:
+				case TokenType.BooleanLiteral:
 				case TokenType.ParenOpen:
 				case TokenType.Identifier:
 				case TokenType.Let:
