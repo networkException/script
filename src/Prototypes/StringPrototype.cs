@@ -23,9 +23,9 @@ namespace networkScript.Prototypes {
 				return new Value(m_value.Substring(first));
 			} else {
 				int first = (int) parameters[0].evaluate(context).asDouble();
-				int second = (int) parameters[0].evaluate(context).asDouble();
+				int second = (int) parameters[1].evaluate(context).asDouble();
 				
-				return new Value(m_value.Substring(first, m_value.Length - second));
+				return new Value(m_value.Substring(first, second - first));
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace networkScript.Prototypes {
 				return new Value(m_value.Substring(0, first));
 			} else {
 				int first = (int) parameters[0].evaluate(context).asDouble();
-				int second = (int) parameters[0].evaluate(context).asDouble();
+				int second = (int) parameters[1].evaluate(context).asDouble();
 				
 				return new Value(m_value.Substring(first, second));
 			}
