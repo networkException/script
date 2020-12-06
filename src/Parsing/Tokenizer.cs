@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 namespace networkScript.Parsing {
 	internal class Tokenizer {
 		private readonly List<Token> m_definitions;
-		private readonly Token m_end_of_file;
 
 		private bool m_line_comment;
 		private bool m_block_comment;
@@ -60,12 +59,12 @@ namespace networkScript.Parsing {
 				new Token(TokenType.Plus, "^\\+")
 			};
 
-			m_end_of_file = new Token(TokenType.Eof, "");
-
 			m_line_comment = false;
 			m_block_comment = false;
+			
 			m_string_literal_type = StringLiteralType.None;
-
+			m_string_literal = string.Empty;
+			
 			m_line = 0;
 			m_column = 0;
 
@@ -79,6 +78,13 @@ namespace networkScript.Parsing {
 					if (m_line_comment) m_line_comment = false;
 
 					takeLine();
+					continue;
+				}
+				
+				if (!done() && matchAndTake(" ")) continue;
+
+				if (m_block_comment || m_line_comment) {
+					take(1);
 					continue;
 				}
 
@@ -160,13 +166,6 @@ namespace networkScript.Parsing {
 					continue;
 				}
 
-				if (!done() && matchAndTake(" ")) continue;
-
-				if (m_block_comment || m_line_comment) {
-					take(1);
-					continue;
-				}
-
 				bool matched = false;
 
 				foreach (Token token in m_definitions) {
@@ -229,9 +228,9 @@ namespace networkScript.Parsing {
 			m_matches.Add(match);
 		}
 
-		public bool inTemplate() { return m_string_literal_type == StringLiteralType.SingleTemplate || m_string_literal_type == StringLiteralType.DoubleTemplate; }
-		
-		public bool inString() { return m_string_literal_type == StringLiteralType.SingleQuote || m_string_literal_type == StringLiteralType.DoubleQuote; }
+		private bool inTemplate() { return m_string_literal_type == StringLiteralType.SingleTemplate || m_string_literal_type == StringLiteralType.DoubleTemplate; }
+
+		private bool inString() { return m_string_literal_type == StringLiteralType.SingleQuote || m_string_literal_type == StringLiteralType.DoubleQuote; }
 
 		private bool done() { return m_source.Length < 1; }
 

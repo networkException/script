@@ -1,7 +1,1 @@
-console.log('It\'s escape time!')
-console.log("Let's see how far this \"language\" can go")
-
-let template = 'me';
-debug(template)
-debug(scope)
-console.log('Might as well add some fancy new features!\nLook its a \${template} in a ${scope}!')
+"${console.log(scope)}"
