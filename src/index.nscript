@@ -1,1 +1,1 @@
-let a, b, c := '${console.log('Hello ${s + ' Friends'}')}';
+console.log('Hello World'.length)

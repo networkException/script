@@ -9,15 +9,15 @@
 		}
 
 		public override Value evaluate(Context context) {
-			Value lhs = m_lhs.evaluate(context);
-			if (!lhs.isObject()) return Value.Undefined; // TODO: Wrapper type checks
-
+			Object lhs = m_lhs.evaluate(context).toObject();
+		
 			string key = m_rhs.asString(context);
-			Object lhsAsObject = lhs.asObject();
-
+			
+			if(!lhs.has(key)) context.memberError("Property " + key + " does not exist on " + lhs);
+			
 			// The object's property needs to be evaluated again in case the result of this expression is the evaluation result of another
 			// (Member)Expression evaluation this expression.
-			return !lhsAsObject.has(key) ? Value.Undefined : lhsAsObject.get(key).evaluate(context);
+			return !lhs.has(key) ? Value.Undefined : lhs.get(key).evaluate(context);
 		}
 
 		public override void dump(int indent) {

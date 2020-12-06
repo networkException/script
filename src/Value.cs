@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using networkScript.Parsing;
+using networkScript.Wrapper;
 
 namespace networkScript {
 	public class Value : Expression {
@@ -112,6 +113,18 @@ namespace networkScript {
 				default:
 					Debug.Assert(true);
 					return false;
+			}
+		}
+
+		public Object toObject() {
+			switch (m_type) {
+				case Type.String:
+					return new StringWrapper(this);
+				case Type.Object:
+					return asObject();
+				default:
+					Debug.Assert(true);
+					return null;
 			}
 		}
 

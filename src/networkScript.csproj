@@ -46,6 +46,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Declarations\VariableDeclaration.cs" />
+        <Compile Include="Error\MemberError.cs" />
         <Compile Include="Error\TypeError.cs" />
         <Compile Include="Expressions\BinaryExpression.cs" />
         <Compile Include="Expressions\Identifier.cs" />
@@ -75,6 +76,7 @@
         <Compile Include="Value.cs" />
         <Compile Include="Statements\WhileStatement.cs" />
         <Compile Include="Function.cs" />
+        <Compile Include="Wrapper\StringWrapper.cs" />
     </ItemGroup>
     <ItemGroup>
         <None Include="App.config" />

@@ -18,7 +18,7 @@ namespace networkScript {
 
 			console.set("log", new Value((parameters, context) => {
 				if (parameters.Count == 1)
-					Console.WriteLine(parameters[0].evaluate(context));
+					Console.WriteLine(parameters[0].evaluate(context).asString());
 				else
 					Console.WriteLine();
 			}));
@@ -26,7 +26,7 @@ namespace networkScript {
 			console.set("error", new Value((parameters, context) => {
 				Console.ForegroundColor = ConsoleColor.Red;
 				if (parameters.Count == 1)
-					Console.WriteLine(parameters[0].evaluate(context));
+					Console.WriteLine(parameters[0].evaluate(context).asString());
 				else
 					Console.WriteLine();
 				Console.ResetColor();
@@ -37,7 +37,7 @@ namespace networkScript {
 			console.set("warn", new Value((parameters, context) => {
 				Console.ForegroundColor = ConsoleColor.Yellow;
 				if (parameters.Count == 1)
-					Console.WriteLine(parameters[0].evaluate(context));
+					Console.WriteLine(parameters[0].evaluate(context).asString());
 				else
 					Console.WriteLine();
 				Console.ResetColor();
@@ -47,9 +47,9 @@ namespace networkScript {
 			scope.assign("debug", new Value((parameters, context) => {
 				Console.ForegroundColor = ConsoleColor.Cyan;
 				if (parameters[0].GetType() == typeof(Identifier))
-					Console.WriteLine(parameters[0] + ": " + parameters[0].evaluate(context));
+					Console.WriteLine(parameters[0] + ": " + parameters[0].evaluate(context).asString());
 				else
-					Console.WriteLine(parameters[0].evaluate(context));
+					Console.WriteLine(parameters[0].evaluate(context).asString());
 				Console.ResetColor();
 			}));
 
@@ -104,6 +104,10 @@ namespace networkScript {
 		public void typeError(string message) { throw new TypeError(message); }
 
 		public void typeError(string message, Node node) { throw new TypeError(message + " at " + node.info()); }
+
+		public void memberError(string message) { throw new MemberError(message); }
+		
+		public void memberError(string message, Node node) { throw new MemberError(message + " at " + node.info()); }
 
 		private Scope current() { return m_scopes.ElementAt(m_scopes.Count - 1); }
 
