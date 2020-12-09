@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace networkScript.Prototypes {
 	public class StringPrototype : Object {
@@ -11,7 +12,9 @@ namespace networkScript.Prototypes {
 			set("length", length);
 			set("substring", substring);
 			set("toLowerCase", toLowerCase);
+			set("toLowerChar", toLowerChar);
 			set("toUpperCase", toUpperCase);
+			set("toUpperChar", toUpperChar);
 			set("charAt", charAt);
 			set("concat", concat);
 			set("trim", trim);
@@ -57,8 +60,30 @@ namespace networkScript.Prototypes {
 
 		private Value toLowerCase(IReadOnlyList<Expression> parameters, Context context) { return new Value(m_value.ToLower()); }
 
+		private Value toLowerChar(IReadOnlyList<Expression> parameters, Context context) {
+			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.toLowerChar");
+			
+			StringBuilder output = new StringBuilder(m_value);
+			int index = (int) parameters[0].evaluate(context).getDouble();
+
+			output[index] = m_value[index].ToString().ToLower()[0];
+
+			return new Value(output.ToString());
+		}
+		
 		private Value toUpperCase(IReadOnlyList<Expression> parameters, Context context) { return new Value(m_value.ToUpper()); }
 
+		private Value toUpperChar(IReadOnlyList<Expression> parameters, Context context) {
+			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.toUpperChar");
+			
+			StringBuilder output = new StringBuilder(m_value);
+			int index = (int) parameters[0].evaluate(context).getDouble();
+
+			output[index] = m_value[index].ToString().ToUpper()[0];
+
+			return new Value(output.ToString());
+		}
+		
 		private Value trim(IReadOnlyList<Expression> parameters, Context context) { return new Value(m_value.Trim()); }
 
 		private Value startsWith(IReadOnlyList<Expression> parameters, Context context) {

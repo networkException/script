@@ -1,1 +1,1 @@
-console.log('networkException'.replace('Exception', '').concat('Script'))
+console.log('networkException'.replace('Exception', '').concat('script'.toUpperChar(0)))
