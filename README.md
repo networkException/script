@@ -26,11 +26,11 @@ ParenOpen(() at line 0:4
 Let(let) at line 0:5
 Identifier(i) at line 0:9
 Equals(=) at line 0:11
-NumericLiteral(0) at line 0:13
+IntLiteral(0) at line 0:13
 Semicolon(;) at line 0:14
 Identifier(i) at line 0:16
 Less(<) at line 0:18
-NumericLiteral(10) at line 0:20
+IntLiteral(10) at line 0:20
 Semicolon(;) at line 0:22
 Identifier(i) at line 0:24
 PlusPlus(++) at line 0:25
@@ -40,27 +40,28 @@ Identifier(console) at line 1:4
 Period(.) at line 1:11
 Identifier(log) at line 1:12
 ParenOpen(() at line 1:15
-StringLiteral(i is ) at line 1:16
+StringLiteral(i is ) at line 1:23
 Plus(+) at line 1:24
 Identifier(i) at line 1:26
 ParenClose()) at line 1:27
 Semicolon(;) at line 1:28
 CurlyClose(}) at line 2:0
+Eof() at line 2:1
 
-Tokenized source in 71 ms (714014 ticks)
+Tokenized source in 59 ms (595038 ticks)
 
 BlockStatement
   ForStatement
     BinaryExpression
       VariableDeclaration
-        IdentifierList
-          Identifier(i)
+        SymbolList
+          Symbol(i)
       Reference
-      Value(0)
+      Value(int: 0)
     BinaryExpression
       Identifier(i)
       Less
-      Value(10)
+      Value(int: 10)
     PostfixExpression
       Increment
       Identifier(i)
@@ -69,13 +70,13 @@ BlockStatement
         CallExpression
           MemberExpression
             Identifier(console)
-            Identifier(log)
+            Symbol(log)
           BinaryExpression
-            Value("i is ")
+            Value(string: 'i is ')
             Add
             Identifier(i)
 
-Parsed tokens in 3 ms (36030 ticks)
+Parsed tokens in 3 ms (33953 ticks)
 
 i is 0
 i is 1
@@ -88,5 +89,5 @@ i is 7
 i is 8
 i is 9
 
-Interpreted tree in 8 ms (85589 ticks)
+Interpreted tree in 6 ms (65892 ticks)
 ```
