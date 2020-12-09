@@ -62,19 +62,19 @@ namespace networkScript.Prototypes {
 		private Value trim(IReadOnlyList<Expression> parameters, Context context) { return new Value(m_value.Trim()); }
 
 		private Value startsWith(IReadOnlyList<Expression> parameters, Context context) {
-			if (parameters.Count != 1 && parameters.Count != 2) context.typeError("Expected 1 argument for string.prototype.startsWith");
+			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.startsWith");
 
 			return new Value(m_value.StartsWith(parameters[0].evaluate(context).asString()));
 		}
 
 		private Value endsWith(IReadOnlyList<Expression> parameters, Context context) {
-			if (parameters.Count != 1 && parameters.Count != 2) context.typeError("Expected 1 argument for string.prototype.endsWith");
+			if (parameters.Count != 1 ) context.typeError("Expected 1 argument for string.prototype.endsWith");
 
 			return new Value(m_value.EndsWith(parameters[0].evaluate(context).asString()));
 		}
 
 		private Value contains(IReadOnlyList<Expression> parameters, Context context) {
-			if (parameters.Count != 1 && parameters.Count != 2) context.typeError("Expected 1 argument for string.prototype.contains");
+			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.contains");
 
 			return new Value(m_value.Contains(parameters[0].evaluate(context).asString()));
 		}
