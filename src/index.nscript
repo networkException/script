@@ -1,1 +1,3 @@
-console.log('.' + '     a   '.trim() + '.');
+console.log('"abcdef".startsWith("a"): ' + "abcdef".startsWith("a"));
+console.log('"abcdef".endsWith("a"): ' + "abcdef".endsWith("a"));
+console.log('"abcdef".contains("a"): ' + "abcdef".contains("a"));
