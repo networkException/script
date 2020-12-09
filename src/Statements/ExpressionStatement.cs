@@ -10,7 +10,7 @@ namespace networkScript.Statements {
 
 		public ExpressionStatement(Expression expression) { m_expression = expression; }
 
-		public override Value execute(Context context) { return m_expression.evaluate(context); }
+		public override void execute(Context context) { m_expression.evaluate(context); }
 
 		public override void dump(int indent) {
 			base.dump(indent);

@@ -10,12 +10,12 @@
 			m_alternate = alternate;
 		}
 
-		public override Value execute(Context context) {
+		public override void execute(Context context) {
 			if (m_predicate.evaluate(context).getBoolean()) {
-				return m_consequent.execute(context);
+				m_consequent.execute(context);
+			} else {
+				m_alternate?.execute(context);
 			}
-
-			return m_alternate != null ? m_alternate.execute(context) : Value.Undefined;
 		}
 
 		public Expression predicate() { return m_predicate; }

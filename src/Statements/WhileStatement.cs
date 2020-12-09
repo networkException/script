@@ -14,12 +14,8 @@ namespace networkScript.Statements {
 			m_consequent = consequent;
 		}
 
-		public override Value execute(Context context) {
-			Value last = Value.Undefined;
-
-			while (m_predicate.evaluate(context).getBoolean()) last = m_consequent.execute(context);
-
-			return last;
+		public override void execute(Context context) {
+			while (m_predicate.evaluate(context).getBoolean()) m_consequent.execute(context);
 		}
 
 		public Expression predicate() { return m_predicate; }

@@ -12,7 +12,7 @@
 			m_consequent = consequent;
 		}
 
-		public override Value execute(Context context) {
+		public override void execute(Context context) {
 			context.enter();
 
 			m_initializer.evaluate(context);
@@ -23,8 +23,6 @@
 			}
 
 			context.leave();
-
-			return Value.Undefined;
 		}
 
 		public override void dump(int indent) {
