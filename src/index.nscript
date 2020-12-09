@@ -1,3 +1,1 @@
-console.log('"abcdef".startsWith("a"): ' + "abcdef".startsWith("a"));
-console.log('"abcdef".endsWith("a"): ' + "abcdef".endsWith("a"));
-console.log('"abcdef".contains("a"): ' + "abcdef".contains("a"));
+console.log('networkException'.replace('Exception', '').concat('Script'))

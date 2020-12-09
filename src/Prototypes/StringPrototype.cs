@@ -78,6 +78,15 @@ namespace networkScript.Prototypes {
 
 			return new Value(m_value.Contains(parameters[0].evaluate(context).asString()));
 		}
+		
+		private Value replace(IReadOnlyList<Expression> parameters, Context context) {
+			if (parameters.Count != 2) context.typeError("Expected 2 arguments for string.prototype.replace");
+
+			string replace = parameters[0].evaluate(context).asString();
+			string with = parameters[1].evaluate(context).asString();
+			
+			return new Value(m_value.Replace(replace, with));
+		}
 
 		private Value charAt(IReadOnlyList<Expression> parameters, Context context) {
 			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.charAt");
