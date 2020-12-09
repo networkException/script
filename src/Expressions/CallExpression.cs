@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace networkScript.Expressions {
 	internal class CallExpression : Expression {
@@ -15,7 +13,7 @@ namespace networkScript.Expressions {
 		public override Value evaluate(Context context) {
 			Value function = m_expression.evaluate(context);
 
-			if (function.isNativeFunction()) return function.asNativeFunction().Invoke(m_parameters, context);
+			if (function.isNativeFunction()) return function.getNativeFunction().Invoke(m_parameters, context);
 
 			context.typeError("Value of type " + function.type() + " is not callable");
 

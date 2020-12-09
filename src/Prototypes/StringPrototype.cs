@@ -21,12 +21,12 @@ namespace networkScript.Prototypes {
 			if (parameters.Count != 1 && parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.substring");
 
 			if (parameters.Count == 1) {
-				int first = (int) parameters[0].evaluate(context).asDouble();
+				int first = (int) parameters[0].evaluate(context).getDouble();
 
 				return new Value(m_value.Substring(first));
 			} else {
-				int first = (int) parameters[0].evaluate(context).asDouble();
-				int second = (int) parameters[1].evaluate(context).asDouble();
+				int first = (int) parameters[0].evaluate(context).getDouble();
+				int second = (int) parameters[1].evaluate(context).getDouble();
 
 				return new Value(m_value.Substring(first, second - first));
 			}
@@ -36,12 +36,12 @@ namespace networkScript.Prototypes {
 			if (parameters.Count != 1 && parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.sublength");
 
 			if (parameters.Count == 1) {
-				int first = (int) parameters[0].evaluate(context).asDouble();
+				int first = (int) parameters[0].evaluate(context).getDouble();
 
 				return new Value(m_value.Substring(0, first));
 			} else {
-				int first = (int) parameters[0].evaluate(context).asDouble();
-				int second = (int) parameters[1].evaluate(context).asDouble();
+				int first = (int) parameters[0].evaluate(context).getDouble();
+				int second = (int) parameters[1].evaluate(context).getDouble();
 
 				return new Value(m_value.Substring(first, second));
 			}
@@ -54,7 +54,7 @@ namespace networkScript.Prototypes {
 		private Value charAt(IReadOnlyList<Expression> parameters, Context context) {
 			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.charAt");
 
-			return new Value(m_value.ToCharArray()[(int) parameters[0].evaluate(context).asDouble()].ToString());
+			return new Value(m_value.ToCharArray()[(int) parameters[0].evaluate(context).getDouble()].ToString());
 		}
 
 		public override string ToString() { return m_value; }

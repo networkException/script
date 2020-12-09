@@ -19,6 +19,12 @@ namespace networkScript {
 			m_info = match.info();
 			m_type = type;
 		}
+		
+		public Value(Type type, object value, LocationInfo info) {
+			m_value = value;
+			m_info = info;
+			m_type = type;
+		}
 
 		public Value(Object value) {
 			m_value = value;
@@ -81,12 +87,12 @@ namespace networkScript {
 		public bool isNativeFunction() { return m_type == Type.NativeFunction; }
 		public bool isNativeProperty() { return m_type == Type.NativeProperty; }
 
-		public bool asBoolean() { return Convert.ToBoolean(m_value); }
-		public double asDouble() { return Convert.ToDouble(m_value); }
-		public Object asObject() { return (Object) m_value; }
-		public Func<List<Expression>, Context, Value> asNativeFunction() { return (Func<List<Expression>, Context, Value>) m_value; }
+		public bool getBoolean() { return (bool) m_value; }
+		public double getDouble() { return (double) m_value; }
+		public Object getObject() { return (Object) m_value; }
+		public Func<List<Expression>, Context, Value> getNativeFunction() { return (Func<List<Expression>, Context, Value>) m_value; }
 
-		public Func<Value> asNativeProperty() { return (Func<Value>) m_value; }
+		public Func<Value> getNativeProperty() { return (Func<Value>) m_value; }
 
 		public string asString() {
 			switch (m_type) {
@@ -95,19 +101,19 @@ namespace networkScript {
 				case Type.Null: return "null";
 				case Type.NativeFunction: return "<NativeFunction>";
 				case Type.NativeProperty: return "<NativeProperty>";
-				default: return Convert.ToString(m_value);
+				default: return m_value.ToString();
 			}
 		}
 
-		public bool toBoolean() {
+		public bool asBoolean() {
 			switch (m_type) {
 				case Type.Undefined:
 				case Type.Null: 
 					return false;
-				case Type.Boolean: return asBoolean();
+				case Type.Boolean: return getBoolean();
 				case Type.Number:
 					if (isNaN()) return false;
-					return asDouble() != 0;
+					return getDouble() != 0;
 				case Type.String: return asString() != "";
 				default:
 					Debug.Assert(true);
@@ -115,12 +121,12 @@ namespace networkScript {
 			}
 		}
 
-		public Object toObject() {
+		public Object asObject() {
 			switch (m_type) {
 				case Type.String: return new StringPrototype(asString());
-				case Type.Object: return asObject();
-				case Type.NativeFunction: return new NativeFunctionPrototype(asNativeFunction());
-				case Type.Boolean: return new BooleanPrototype(asBoolean());
+				case Type.Object: return getObject();
+				case Type.NativeFunction: return new NativeFunctionPrototype(getNativeFunction());
+				case Type.Boolean: return new BooleanPrototype(getBoolean());
 				default:
 					return new Object();
 			}
@@ -129,7 +135,7 @@ namespace networkScript {
 		public Value increaseNumberBy(Value value) {
 			if (!value.isNumber() || !isNumber()) return Undefined;
 
-			m_value = asDouble() + value.asDouble();
+			m_value = getDouble() + value.getDouble();
 			return this;
 		}
 
@@ -140,10 +146,11 @@ namespace networkScript {
 
 		public Type type() { return m_type; }
 
-		public override Value evaluate(Context context) { return isNativeProperty() ? asNativeProperty().Invoke() : this; }
+		public override Value evaluate(Context context) { return isNativeProperty() ? getNativeProperty().Invoke() : this; }
 
 		public override string ToString() {
-			if(isString()) return "'" + asString() + "'";
+			if (isString()) return "'" + asString() + "'";
+			if (isBoolean()) return getBoolean() ? "true" : "false";
 			return asString();
 		}
 

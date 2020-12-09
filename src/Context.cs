@@ -62,8 +62,14 @@ namespace networkScript {
 		}
 
 		public Expression get(Expression expression) {
-			string key = expression.asString(this);
+			string key = expression.evaluate(this).asString();
 
+			foreach (Scope scope in scopeStack().Where(scope => scope.has(key))) return scope.get(key);
+
+			return Value.Undefined;
+		}
+		
+		public Expression get(string key) {
 			foreach (Scope scope in scopeStack().Where(scope => scope.has(key))) return scope.get(key);
 
 			return Value.Undefined;
@@ -71,7 +77,7 @@ namespace networkScript {
 
 		public Value assign(Expression expressions, Value value) {
 			expressions.visit(expression => {
-				string key = expression.asString(this);
+				string key = expression.evaluate(this).asString();
 
 				foreach (Scope scope in scopeStack().Where(scope => scope.has(key))) {
 					scope.assign(key, value);
@@ -84,7 +90,7 @@ namespace networkScript {
 
 		public Expression reference(Expression expressions, Expression value) {
 			expressions.visit(expression => {
-				string key = expression.asString(this);
+				string key = expression.evaluate(this).asString();
 
 				foreach (Scope scope in scopeStack().Where(scope => scope.has(key))) {
 					scope.reference(key, value);
@@ -95,7 +101,7 @@ namespace networkScript {
 			return value;
 		}
 
-		public Expression declare(Expression expression) { return current().declare(expression.asString(this)); }
+		public Expression declare(Expression expression) { return current().declare(expression.evaluate(this).asString()); }
 
 		public void enter() { m_scopes.Add(new Scope()); }
 

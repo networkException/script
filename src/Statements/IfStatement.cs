@@ -11,7 +11,7 @@
 		}
 
 		public override Value execute(Context context) {
-			if (m_predicate.evaluate(context).asBoolean()) {
+			if (m_predicate.evaluate(context).getBoolean()) {
 				return m_consequent.execute(context);
 			}
 

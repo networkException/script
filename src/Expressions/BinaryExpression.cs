@@ -67,7 +67,7 @@ namespace networkScript.Expressions {
 					Value lhs = m_lhs.evaluate(context);
 					Value rhs = m_rhs.evaluate(context);
 
-					if (lhs.isNumber() && rhs.isNumber()) return new Value(m_lhs.evaluate(context).asDouble() > m_rhs.evaluate(context).asDouble());
+					if (lhs.isNumber() && rhs.isNumber()) return new Value(m_lhs.evaluate(context).getDouble() > m_rhs.evaluate(context).getDouble());
 
 					return Value.False;
 				}
@@ -75,7 +75,7 @@ namespace networkScript.Expressions {
 					Value lhs = m_lhs.evaluate(context);
 					Value rhs = m_rhs.evaluate(context);
 
-					if (lhs.isNumber() && rhs.isNumber()) return new Value(m_lhs.evaluate(context).asDouble() < m_rhs.evaluate(context).asDouble());
+					if (lhs.isNumber() && rhs.isNumber()) return new Value(m_lhs.evaluate(context).getDouble() < m_rhs.evaluate(context).getDouble());
 
 					return Value.False;
 				}
@@ -83,7 +83,7 @@ namespace networkScript.Expressions {
 					Value lhs = m_lhs.evaluate(context);
 					Value rhs = m_rhs.evaluate(context);
 
-					if (lhs.type() == Value.Type.Number && rhs.type() == Value.Type.Number) return new Value(lhs.asDouble() + rhs.asDouble());
+					if (lhs.type() == Value.Type.Number && rhs.type() == Value.Type.Number) return new Value(lhs.getDouble() + rhs.getDouble());
 
 					if (lhs.type() == Value.Type.String || rhs.type() == Value.Type.String) return new Value(lhs.asString() + rhs.asString());
 
@@ -93,7 +93,7 @@ namespace networkScript.Expressions {
 					Value lhs = m_lhs.evaluate(context);
 					Value rhs = m_rhs.evaluate(context);
 
-					if (lhs.type() == Value.Type.Number && rhs.type() == Value.Type.Number) return new Value(lhs.asDouble() * rhs.asDouble());
+					if (lhs.type() == Value.Type.Number && rhs.type() == Value.Type.Number) return new Value(lhs.getDouble() * rhs.getDouble());
 
 					return Value.Null;
 				}

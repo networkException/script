@@ -9,17 +9,17 @@
 		}
 
 		public override Value evaluate(Context context) {
-			Object lhs = m_lhs.evaluate(context).toObject();
+			Object lhs = m_lhs.evaluate(context).asObject();
 			string key;
 
-			if (lhs.hasNumericIndex() && !m_rhs.isIdentifier()) {
+			if (lhs.hasNumericIndex()) { // TODO: Check if rhs is int
 				Value rhs = m_rhs.evaluate(context);
 
-				if (rhs.isNumber()) return lhs.numericIndex((int) rhs.asDouble());
+				if (rhs.isNumber()) return lhs.numericIndex((int) rhs.getDouble());
 
 				key = rhs.asString();
 			} else {
-				key = m_rhs.asString(context);
+				key = m_rhs.evaluate(context).asString();
 			}
 
 			if(!lhs.has(key)) context.memberError("Property " + key + " does not exist on " + lhs);

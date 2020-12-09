@@ -3,21 +3,21 @@ using networkScript.Expressions;
 
 namespace networkScript.Declarations {
 	public class VariableDeclaration : Expression {
-		private readonly IdentifierList m_identifiers;
+		private readonly SymbolList m_symbols;
 
-		public VariableDeclaration(IdentifierList identifiers) { m_identifiers = identifiers; }
+		public VariableDeclaration(SymbolList symbols) { m_symbols = symbols; }
 
 		public override Value evaluate(Context context) {
-			foreach (Identifier identifier in m_identifiers.identifiers()) context.declare(identifier);
+			foreach (Symbol symbol in m_symbols.symbols()) context.declare(symbol);
 
 			return Value.Null;
 		}
 
-		public override void visit(Action<Expression> visitor) { m_identifiers.visit(visitor); }
+		public override void visit(Action<Expression> visitor) { m_symbols.visit(visitor); }
 
 		public override void dump(int indent) {
 			base.dump(indent);
-			m_identifiers.dump(indent + 1);
+			m_symbols.dump(indent + 1);
 		}
 	}
 }

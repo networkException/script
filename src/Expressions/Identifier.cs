@@ -2,7 +2,7 @@
 
 namespace networkScript.Expressions {
 	public class Identifier : Expression {
-		private readonly string m_value;
+		protected readonly string m_value;
 
 		public Identifier(string value) { m_value = value; }
 
@@ -11,9 +11,7 @@ namespace networkScript.Expressions {
 			m_info = match.info();
 		}
 
-		public override Value evaluate(Context context) { return context.get(this).evaluate(context); }
-
-		public string value() { return m_value; }
+		public override Value evaluate(Context context) { return context.get(m_value).evaluate(context); }
 
 		public override void dump(int indent) { dumpString(ToString(), indent); }
 

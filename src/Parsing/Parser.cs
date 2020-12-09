@@ -100,11 +100,17 @@ namespace networkScript.Parsing {
 					if (match(TokenType.TemplateOpen)) return parseTemplate(value);
 
 					return new Value(Value.Type.String, value);
-				case TokenType.NumericLiteral: return new Value(Value.Type.Number, consume(TokenType.NumericLiteral));
-				case TokenType.BooleanLiteral: return new Value(Value.Type.Boolean, consume(TokenType.BooleanLiteral));
+				case TokenType.NumericLiteral: {
+					TokenMatch token = consume(TokenType.NumericLiteral);
+					return new Value(Value.Type.Number, Convert.ToDouble(token.value()), token.info());
+				}
+				case TokenType.BooleanLiteral: {
+					TokenMatch token = consume(TokenType.BooleanLiteral);
+					return new Value(Value.Type.Boolean, Convert.ToBoolean(token.value()), token.info());
+				}
 				case TokenType.Let:
 					consume(TokenType.Let);
-					return new VariableDeclaration(parseIdentifiers());
+					return new VariableDeclaration(parseSymbols());
 				default:
 					error("Unimplemented primary expression parsing for " + current());
 					return null;
@@ -151,7 +157,7 @@ namespace networkScript.Parsing {
 					return new BinaryExpression(BinaryOperation.PlusEquals, primary, parseExpression());
 				case TokenType.Period:
 					consume(TokenType.Period);
-					return new MemberExpression(primary, parseIdentifier());
+					return new MemberExpression(primary, parseSymbol());
 				case TokenType.BracketOpen:
 					consume(TokenType.BracketOpen);
 					Expression computed = parseExpression();
@@ -180,12 +186,14 @@ namespace networkScript.Parsing {
 
 		private Identifier parseIdentifier() { return new Identifier(consume(TokenType.Identifier)); }
 
-		private IdentifierList parseIdentifiers() {
-			List<Identifier> identifiers = new List<Identifier>();
+		private Symbol parseSymbol() { return new Symbol(consume(TokenType.Identifier)); }
+
+		private SymbolList parseSymbols() {
+			List<Symbol> symbols = new List<Symbol>();
 			do
-				identifiers.Add(parseIdentifier());
+				symbols.Add(parseSymbol());
 			while (matchAndConsume(TokenType.Comma));
-			return new IdentifierList(identifiers);
+			return new SymbolList(symbols);
 		}
 
 		private TemplateExpression parseTemplate(TokenMatch leading) {

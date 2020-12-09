@@ -17,7 +17,7 @@
 
 			m_initializer.evaluate(context);
 
-			while (m_predicate.evaluate(context).asBoolean()) {
+			while (m_predicate.evaluate(context).getBoolean()) {
 				m_consequent.execute(context);
 				m_increment.evaluate(context);
 			}

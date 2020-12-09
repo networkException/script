@@ -17,7 +17,7 @@ namespace networkScript.Statements {
 		public override Value execute(Context context) {
 			Value last = Value.Undefined;
 
-			while (m_predicate.evaluate(context).asBoolean()) last = m_consequent.execute(context);
+			while (m_predicate.evaluate(context).getBoolean()) last = m_consequent.execute(context);
 
 			return last;
 		}
