@@ -14,6 +14,8 @@ namespace networkScript.Prototypes {
 			set("toUpperCase", toUpperCase);
 			set("charAt", charAt);
 			set("concat", concat);
+			set("trim", trim);
+
 			registerNumericIndex(index => new Value(m_value.ToCharArray()[index].ToString()));
 		}
 
@@ -53,15 +55,15 @@ namespace networkScript.Prototypes {
 
 		private Value toUpperCase(IReadOnlyList<Expression> parameters, Context context) { return new Value(m_value.ToUpper()); }
 
+		private Value trim(IReadOnlyList<Expression> parameters, Context context) { return new Value(m_value.Trim()); }
+
 		private Value charAt(IReadOnlyList<Expression> parameters, Context context) {
 			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.charAt");
 
 			return new Value(m_value.ToCharArray()[(int) parameters[0].evaluate(context).getDouble()].ToString());
 		}
 
-		private Value concat(IEnumerable<Expression> parameters, Context context) {
-			return new Value(m_value + string.Join("", parameters.Select(expression => expression.evaluate(context).asString())));
-		}
+		private Value concat(IEnumerable<Expression> parameters, Context context) { return new Value(m_value + string.Join("", parameters.Select(expression => expression.evaluate(context).asString()))); }
 
 		public override string ToString() { return m_value; }
 	}
