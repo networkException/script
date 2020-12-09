@@ -19,7 +19,7 @@ namespace networkScript {
 			m_info = match.info();
 			m_type = type;
 		}
-		
+
 		public Value(Type type, object value, LocationInfo info) {
 			m_value = value;
 			m_info = info;
@@ -47,10 +47,7 @@ namespace networkScript {
 		}
 
 		// TODO: Setter implementation
-		public Value(Func<Value, Value> nativeProperty)
-		{
-			throw new NotImplementedException("NativeProperty with Setter not implemented");
-		}
+		public Value(Func<Value, Value> nativeProperty) { throw new NotImplementedException("NativeProperty with Setter not implemented"); }
 
 		public Value(Func<Value> nativeProperty) {
 			m_value = nativeProperty;
@@ -89,14 +86,15 @@ namespace networkScript {
 
 		public bool getBoolean() { return (bool) m_value; }
 		public double getDouble() { return (double) m_value; }
+		public string getString() { return (string) m_value; }
 		public Object getObject() { return (Object) m_value; }
 		public Func<List<Expression>, Context, Value> getNativeFunction() { return (Func<List<Expression>, Context, Value>) m_value; }
-
 		public Func<Value> getNativeProperty() { return (Func<Value>) m_value; }
 
 		public string asString() {
 			switch (m_type) {
-				case Type.String: return (string) m_value;
+				case Type.String: return getString();
+				case Type.Boolean: return getBoolean() ? "true" : "false";
 				case Type.Undefined: return "undefined";
 				case Type.Null: return "null";
 				case Type.NativeFunction: return "<NativeFunction>";
@@ -108,7 +106,7 @@ namespace networkScript {
 		public bool asBoolean() {
 			switch (m_type) {
 				case Type.Undefined:
-				case Type.Null: 
+				case Type.Null:
 					return false;
 				case Type.Boolean: return getBoolean();
 				case Type.Number:
@@ -123,12 +121,11 @@ namespace networkScript {
 
 		public Object asObject() {
 			switch (m_type) {
-				case Type.String: return new StringPrototype(asString());
 				case Type.Object: return getObject();
-				case Type.NativeFunction: return new NativeFunctionPrototype(getNativeFunction());
+				case Type.String: return new StringPrototype(asString());
 				case Type.Boolean: return new BooleanPrototype(getBoolean());
-				default:
-					return new Object();
+				case Type.NativeFunction: return new NativeFunctionPrototype(getNativeFunction());
+				default: return new Object();
 			}
 		}
 
@@ -156,9 +153,7 @@ namespace networkScript {
 
 		public Value copy() { return new Value(m_type, m_value); }
 
-		public override void dump(int indent) {
-			dumpString("Value(" + ToString() + ")", indent);
-		}
+		public override void dump(int indent) { dumpString("Value(" + ToString() + ")", indent); }
 
 		public enum Type {
 			Null,
