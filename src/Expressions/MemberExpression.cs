@@ -15,7 +15,7 @@
 			if (lhs.hasNumericIndex()) { // TODO: Check if rhs is int
 				Value rhs = m_rhs.evaluate(context);
 
-				if (rhs.isNumber()) return lhs.numericIndex((int) rhs.getDouble());
+				if (rhs.isNumber()) return lhs.numericIndex(rhs.getInt());
 
 				key = rhs.asString();
 			} else {

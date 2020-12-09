@@ -32,8 +32,9 @@
 		Plus,
 		Identifier,
 		StringLiteral,
-		NumericLiteral,
 		BooleanLiteral,
+		DoubleLiteral,
+		IntLiteral,
 		TypeDefinition,
 		Eof
 	}

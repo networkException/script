@@ -32,12 +32,12 @@ namespace networkScript.Prototypes {
 			if (parameters.Count != 1 && parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.substring");
 
 			if (parameters.Count == 1) {
-				int first = (int) parameters[0].evaluate(context).getDouble();
+				int first = parameters[0].evaluate(context).getInt();
 
 				return new Value(m_value.Substring(first));
 			} else {
-				int first = (int) parameters[0].evaluate(context).getDouble();
-				int second = (int) parameters[1].evaluate(context).getDouble();
+				int first = parameters[0].evaluate(context).getInt();
+				int second = parameters[1].evaluate(context).getInt();
 
 				return new Value(m_value.Substring(first, second - first));
 			}
@@ -47,12 +47,12 @@ namespace networkScript.Prototypes {
 			if (parameters.Count != 1 && parameters.Count != 2) context.typeError("Expected 1-2 arguments for string.prototype.sublength");
 
 			if (parameters.Count == 1) {
-				int first = (int) parameters[0].evaluate(context).getDouble();
+				int first = parameters[0].evaluate(context).getInt();
 
 				return new Value(m_value.Substring(0, first));
 			} else {
-				int first = (int) parameters[0].evaluate(context).getDouble();
-				int second = (int) parameters[1].evaluate(context).getDouble();
+				int first = parameters[0].evaluate(context).getInt();
+				int second = parameters[1].evaluate(context).getInt();
 
 				return new Value(m_value.Substring(first, second));
 			}
@@ -64,7 +64,7 @@ namespace networkScript.Prototypes {
 			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.toLowerChar");
 			
 			StringBuilder output = new StringBuilder(m_value);
-			int index = (int) parameters[0].evaluate(context).getDouble();
+			int index = parameters[0].evaluate(context).getInt();
 
 			output[index] = m_value[index].ToString().ToLower()[0];
 
@@ -77,7 +77,7 @@ namespace networkScript.Prototypes {
 			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.toUpperChar");
 			
 			StringBuilder output = new StringBuilder(m_value);
-			int index = (int) parameters[0].evaluate(context).getDouble();
+			int index = parameters[0].evaluate(context).getInt();
 
 			output[index] = m_value[index].ToString().ToUpper()[0];
 
@@ -116,7 +116,7 @@ namespace networkScript.Prototypes {
 		private Value charAt(IReadOnlyList<Expression> parameters, Context context) {
 			if (parameters.Count != 1) context.typeError("Expected 1 argument for string.prototype.charAt");
 
-			return new Value(m_value.ToCharArray()[(int) parameters[0].evaluate(context).getDouble()].ToString());
+			return new Value(m_value.ToCharArray()[parameters[0].evaluate(context).getInt()].ToString());
 		}
 
 		private Value concat(IEnumerable<Expression> parameters, Context context) { return new Value(m_value + string.Join("", parameters.Select(expression => expression.evaluate(context).asString()))); }

@@ -7,7 +7,7 @@ using networkScript.Prototypes;
 namespace networkScript {
 	public class Value : Expression {
 		private object m_value;
-		private readonly Type m_type;
+		private Type m_type;
 
 		private Value(Type type, object value) {
 			m_value = value;
@@ -66,17 +66,18 @@ namespace networkScript {
 
 		public Value(int value) {
 			m_value = value;
-			m_type = Type.Number;
+			m_type = Type.Int;
 		}
 
 		public Value(double value) {
 			m_value = value;
-			m_type = Type.Number;
+			m_type = Type.Double;
 		}
 
 		//FIXME: Full implementation
-		public bool isNaN() { return !isNumber(); }
-		public bool isNumber() { return m_type == Type.Number; }
+		public bool isNumber() { return isDouble() || isInt(); }
+		public bool isDouble() { return m_type == Type.Double; }
+		public bool isInt() { return m_type == Type.Int; }
 		public bool isString() { return m_type == Type.String; }
 		public bool isBoolean() { return m_type == Type.Boolean; }
 		public bool isObject() { return m_type == Type.Object; }
@@ -86,6 +87,7 @@ namespace networkScript {
 
 		public bool getBoolean() { return (bool) m_value; }
 		public double getDouble() { return (double) m_value; }
+		public int getInt() { return (int) m_value; }
 		public string getString() { return (string) m_value; }
 		public Object getObject() { return (Object) m_value; }
 		public Func<List<Expression>, Context, Value> getNativeFunction() { return (Func<List<Expression>, Context, Value>) m_value; }
@@ -109,16 +111,25 @@ namespace networkScript {
 				case Type.Null:
 					return false;
 				case Type.Boolean: return getBoolean();
-				case Type.Number:
-					if (isNaN()) return false;
-					return getDouble() != 0;
+				case Type.Double: return getDouble() != 0;
+				case Type.Int: return getDouble() != 0;
 				case Type.String: return asString() != "";
 				default:
 					Debug.Assert(true);
 					return false;
 			}
 		}
-
+		
+		public double asDouble() {
+			switch (m_type) {
+				case Type.Int: return Convert.ToDouble(getInt());
+				case Type.Double: return getDouble();
+				default:
+					Debug.Assert(true);
+					return 0;
+			}
+		}
+		
 		public Object asObject() {
 			switch (m_type) {
 				case Type.Object: return getObject();
@@ -131,8 +142,14 @@ namespace networkScript {
 
 		public Value increaseNumberBy(Value value) {
 			if (!value.isNumber() || !isNumber()) return Undefined;
+			if (value.isInt() && isInt()) {
+				m_value = getInt() + value.getInt();
+				return this;
+			}
 
-			m_value = getDouble() + value.getDouble();
+			m_type = Type.Double;
+			m_value = m_value = asDouble() + value.asDouble();
+
 			return this;
 		}
 
@@ -146,9 +163,9 @@ namespace networkScript {
 		public override Value evaluate(Context context) { return isNativeProperty() ? getNativeProperty().Invoke() : this; }
 
 		public override string ToString() {
-			if (isString()) return "'" + asString() + "'";
-			if (isBoolean()) return getBoolean() ? "true" : "false";
-			return asString();
+			if (isString()) return "string: '" + asString() + "'";
+			if (isBoolean()) return "boolean" + (getBoolean() ? "true" : "false");
+			return m_type.ToString().ToLower() + ": "+ asString();
 		}
 
 		public Value copy() { return new Value(m_type, m_value); }
@@ -159,7 +176,8 @@ namespace networkScript {
 			Null,
 			Undefined,
 			String,
-			Number,
+			Double,
+			Int,
 			Boolean,
 			Object,
 			Function,

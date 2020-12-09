@@ -100,9 +100,13 @@ namespace networkScript.Parsing {
 					if (match(TokenType.TemplateOpen)) return parseTemplate(value);
 
 					return new Value(Value.Type.String, value);
-				case TokenType.NumericLiteral: {
-					TokenMatch token = consume(TokenType.NumericLiteral);
-					return new Value(Value.Type.Number, Convert.ToDouble(token.value()), token.info());
+				case TokenType.DoubleLiteral: {
+					TokenMatch token = consume(TokenType.DoubleLiteral);
+					return new Value(Value.Type.Double, Convert.ToDouble(token.value()), token.info());
+				}
+				case TokenType.IntLiteral: {
+					TokenMatch token = consume(TokenType.IntLiteral);
+					return new Value(Value.Type.Int, Convert.ToInt32(token.value()), token.info());
 				}
 				case TokenType.BooleanLiteral: {
 					TokenMatch token = consume(TokenType.BooleanLiteral);
@@ -249,7 +253,7 @@ namespace networkScript.Parsing {
 
 		private bool matchExpression() {
 			switch (current().token()) {
-				case TokenType.NumericLiteral:
+				case TokenType.DoubleLiteral:
 				case TokenType.StringLiteral:
 				case TokenType.BooleanLiteral:
 				case TokenType.ParenOpen:
